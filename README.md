@@ -35,6 +35,18 @@ Instead of paying for separate API keys or manually wiring multiple plugins, **F
 
 ---
 
+## What You Can Build in Figma
+
+Because the Copilot runs full async Figma Plugin API scripts + `figma-console-mcp` tools directly on your canvas, it handles **anything you'd normally build in Figma**:
+
+- **Social Media Posts & Carousels** — Generate 1080×1350 Instagram carousels, LinkedIn visual posts, YouTube thumbnails, and promo banners from a prompt or reference image.
+- **UI/UX Screens & Components** — Design landing page sections, mobile app screens, dashboards, modals, and clean responsive Auto Layout components.
+- **Design Systems & Tokens** — Create and update Variables, color/spacing collections, Light/Dark mode themes, typography styles, and multi-variant Component Sets.
+- **FigJam Boards & Figma Slides** — Generate architecture flowcharts, sticky-note brainstorms, comparison tables, and multi-slide presentation decks.
+- **Reference-to-Figma & Audits** — Paste up to 5 screenshots (`Cmd+V`) to match a layout style, fix contrast/hierarchy issues, or convert English layouts into native **Persian (RTL)**.
+
+---
+
 ## Key Capabilities
 
 ### 1. Direct Canvas AI Copilot
