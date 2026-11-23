@@ -50,16 +50,23 @@ Running this plugin automatically opens the Desktop Bridge WebSocket client (`92
 - **Live Canvas & Execution** — Run arbitrary Plugin API code (`figma_execute`), capture live canvas screenshots (`figma_capture_screenshot`), inspect real-time plugin console logs, and audit accessibility/parity.
 - **FigJam & Figma Slides** — Create stickies, connectors, tables, diagrams, slides, and transitions.
 
-### 3. Supported Local AI Providers
-| Provider | CLI Binary | Notes |
+### 3. Supported Local AI Providers (Zero API Keys)
+
+<p align="center">
+  <img src="assets/showcase-providers.png" alt="Multi-CLI Provider Switcher & Auto-Detected CLIs Onboarding" width="90%" />
+</p>
+
+The local bridge automatically scans your `PATH` and shows a green **Ready** indicator for every AI CLI installed on your machine — switch between them anytime from **Settings → Provider**:
+
+| Provider | CLI Binary | Best For & Notes |
 | --- | --- | --- |
 | **Antigravity CLI** | `agy` | Live `stream-json` token & step streaming + Effort picker (`Low` / `Medium` / `High` / `XHigh`) |
-| **Claude Code CLI** | `claude` | JSON mode with full skill context |
-| **Cursor Agent CLI** | `cursor-agent` / `agent` | Auto-detected from PATH |
-| **OpenAI Codex CLI** | `codex` | `codex exec` support |
-| **Gemini CLI** | `gemini` | Prompt CLI support |
-| **Ollama (Local)** | `ollama` | 100% offline local models |
-| **Custom CLI** | Any | Configure custom command template (`my-cli -p {prompt}`) in Settings |
+| **Claude Code CLI** | `claude` | Anthropic Claude models directly via your Claude Code CLI subscription with `@skill` context |
+| **Cursor Agent CLI** | `cursor-agent` / `agent` | Cursor's headless agent CLI auto-detected from PATH |
+| **OpenAI Codex (ChatGPT)** | `codex` | OpenAI / ChatGPT Codex CLI (`codex exec`) using your local ChatGPT/Codex auth |
+| **Gemini CLI** | `gemini` | Google Gemini CLI (`gemini -p`) |
+| **Ollama (Local)** | `ollama` | 100% offline local open-weights models |
+| **Custom CLI** | Any binary/script | Run any custom command template (`my-cli -p {prompt}`) |
 
 ---
 
