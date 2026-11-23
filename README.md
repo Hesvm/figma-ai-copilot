@@ -1,7 +1,7 @@
 # Figma AI Copilot (All-in-One)
 
 <p align="center">
-  <img src="assets/hero-banner.png" alt="Figma AI Copilot — Light Mode Hero Showcase" width="100%" />
+  <img src="assets/hero.png" alt="Figma AI Copilot — Pricing Card Selection & Live Light Mode UI" width="100%" />
 </p>
 
 **Local-first AI Copilot for Figma Desktop — zero API keys required.**  
@@ -9,10 +9,18 @@ Connect Figma directly to your local AI CLIs (**Antigravity**, **Claude Code**, 
 
 ---
 
-## Interface Showcase
+## Interface Gallery
 
 <p align="center">
-  <img src="assets/ui-showcase.png" alt="Figma AI Copilot — Live Canvas Execution, Model & Effort Picker, and Bilingual EN/Persian RTL UI" width="100%" />
+  <img src="assets/showcase-features.png" alt="Live Canvas Execution, Inline @skill Mentions, and Model & Effort Picker" width="100%" />
+</p>
+
+<p align="center">
+  <img src="assets/showcase-persian.png" alt="Native Persian (RTL) Typography with IRANYekanX" width="78%" />
+</p>
+
+<p align="center">
+  <img src="assets/showcase-settings.png" alt="Local Multi-CLI Settings and Creator Modal" width="90%" />
 </p>
 
 ---

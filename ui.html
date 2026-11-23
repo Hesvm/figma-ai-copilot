@@ -4863,13 +4863,19 @@
     });
   }
 
-  function formatMcpStatusText(raw, lang) {
+  function formatMcpStatusText(raw, lang, short) {
     var s = String(raw || '').trim();
-    if (lang !== 'fa') return s || 'Connecting...';
-    if (/Connected/i.test(s)) return 'متصل — آماده کار روی فایل';
-    if (/Paused/i.test(s)) return 'متوقف — هوش مصنوعی غیرفعال';
-    if (/Looking|Connecting/i.test(s)) return 'در حال اتصال...';
-    return s || 'در حال اتصال...';
+    if (lang !== 'fa') {
+      if (short) {
+        if (/Connected/i.test(s)) return 'Connected';
+        if (/Paused/i.test(s)) return 'Paused';
+        return 'Connecting...';
+      }
+      return s || 'Connecting...';
+    }
+    if (/Connected/i.test(s)) return short ? 'متصل' : 'متصل — آماده کار روی فایل';
+    if (/Paused/i.test(s)) return short ? 'متوقف' : 'متوقف — هوش مصنوعی غیرفعال';
+    return 'در حال اتصال...';
   }
 
   function closeAllPopovers(except) {
@@ -5090,7 +5096,7 @@
     var headerState = document.getElementById('copilot-header-state');
     var origState = document.getElementById('status-state');
     if (headerState && origState) {
-      headerState.textContent = formatMcpStatusText(origState.textContent, lang);
+      headerState.textContent = formatMcpStatusText(origState.textContent, lang, true);
     }
 
     var firstAiText = document.querySelector('.c-msg-ai .c-ai-text');
@@ -6466,8 +6472,67 @@
 
   parent.postMessage({ pluginMessage: { type: 'COPILOT_GET_SELECTION' } }, '*');
 
-  if (window.location && window.location.search && window.location.search.indexOf('demo=1') !== -1) {
-    setTimeout(runDemoShowcase, 250);
+  function runCleanShowcase(lang) {
+    applyLanguage(lang === 'fa' ? 'fa' : 'en');
+    applyTheme('light');
+    var isFa = lang === 'fa';
+    var chips = document.getElementById('copilot-starter-chips');
+    if (chips) chips.remove();
+    if (titlePill) titlePill.textContent = isFa ? 'کارت محصول' : 'Pricing Card';
+    if (selChip) {
+      selChip.style.display = 'flex';
+      var iconEl = document.getElementById('copilot-sel-icon');
+      var typeEl = document.getElementById('copilot-sel-type');
+      if (iconEl) iconEl.textContent = '#';
+      if (selLabel) selLabel.textContent = isFa ? 'Product Card' : 'Pricing Card';
+      if (typeEl) typeEl.textContent = 'FRAME';
+    }
+    var cardThumbSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160" viewBox="0 0 240 160">' +
+      '<rect width="240" height="160" rx="16" fill="#F8FAFC"/>' +
+      '<rect x="16" y="16" width="208" height="128" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>' +
+      '<rect x="28" y="28" width="64" height="10" rx="5" fill="#E0E7FF"/>' +
+      '<rect x="28" y="46" width="90" height="18" rx="6" fill="#0F172A"/>' +
+      '<rect x="28" y="76" width="160" height="8" rx="4" fill="#CBD5E1"/>' +
+      '<rect x="28" y="90" width="132" height="8" rx="4" fill="#E2E8F0"/>' +
+      '<rect x="28" y="112" width="184" height="22" rx="8" fill="#18181B"/>' +
+      '</svg>'
+    );
+    appendUserMessage(
+      isFa
+        ? 'این کارت محصول رو با فاصله داخلی 24px تبدیل به Auto Layout تمیز کن'
+        : 'Convert this pricing card to vertical Auto Layout with 24px padding and clean hierarchy',
+      cardThumbSvg,
+      { count: 1, type: 'FRAME', name: isFa ? 'Product Card' : 'Pricing Card' }
+    );
+    var b = appendAiMessage('', isFa ? 'Product Card ویرایش شد' : 'Edited Pricing Card');
+    b.renderSteps(isFa ? [
+      { verb: 'بررسی شد', icon: 'analyze', target: 'Product Card', detail: '360×440' },
+      { verb: 'ویرایش شد', icon: 'code', target: 'Product Card', add: '+32', del: '-6' }
+    ] : [
+      { verb: 'Analyzed', icon: 'analyze', target: 'Pricing Card', detail: '360×440' },
+      { verb: 'Edited', icon: 'code', target: 'Pricing Card', add: '+32', del: '-6' }
+    ], false);
+    b.bubbleBox.style.display = 'block';
+    b.body.innerHTML = formatInlineMarkdown(isFa
+      ? 'ساختار `Product Card` به یک چیدمان عمودی **Auto Layout** با فاصله داخلی `24px`، فاصله بین المان‌ها `16px` و ترازبندی دقیق تبدیل شد.'
+      : 'Reorganized **Pricing Card** into a vertical `Auto Layout` stack with `24px` padding, `16px` gap, and consistent typography hierarchy.');
+    b.card.style.display = 'flex';
+    b.card.className = 'c-artifact-card done';
+    b.cardThumb.textContent = '✓';
+    b.cardTitle.textContent = isFa ? 'Product Card · Auto Layout اعمال شد' : 'Pricing Card · Auto Layout applied';
+    b.cardSub.textContent = isFa ? 'Gemini 4 Neon Medium · ۳.۴ ثانیه' : 'Gemini 4 Neon Medium · 3.8s';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  if (window.location && window.location.search) {
+    if (window.location.search.indexOf('demo=1') !== -1) {
+      setTimeout(runDemoShowcase, 250);
+    } else if (window.location.search.indexOf('showcase=en') !== -1) {
+      setTimeout(function() { runCleanShowcase('en'); }, 200);
+    } else if (window.location.search.indexOf('showcase=fa') !== -1) {
+      setTimeout(function() { runCleanShowcase('fa'); }, 200);
+    }
   }
 })();
 </script>
