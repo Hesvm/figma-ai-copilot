@@ -1284,6 +1284,64 @@
       flex: 1;
     }
 
+    /* Crypto Support Modal */
+    .c-donate-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .c-donate-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 1px solid var(--c-border);
+      background: var(--c-surface-soft);
+      color: var(--c-text);
+      font-family: inherit;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .c-donate-tab:hover { background: var(--c-menu-hover); }
+    .c-donate-tab.active {
+      background: var(--c-surface);
+      border-color: #26A17B;
+      box-shadow: 0 2px 10px rgba(38, 161, 123, 0.15);
+    }
+    .c-donate-tab-sub {
+      font-size: 8.5px;
+      font-weight: 500;
+      color: var(--c-text-muted);
+    }
+    .c-donate-box {
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--c-surface-soft);
+      border: 1px solid var(--c-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .c-donate-addr {
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10.5px;
+      color: var(--c-text);
+      direction: ltr;
+      text-align: left;
+      word-break: break-all;
+      user-select: all;
+      line-height: 1.45;
+    }
+
     .header-title-pill {
       position: relative;
       z-index: 3;
@@ -2348,6 +2406,11 @@
               <span>✦</span>
               <span id="txt-settings-guide">Setup Guide (0 → 100)</span>
             </button>
+
+            <button type="button" id="copilot-open-donate-btn" style="width:100%; margin-top:5px; padding:7px 10px; border-radius:10px; border:1px solid var(--c-border); background:var(--c-surface-soft); color:var(--c-text); font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <span style="color:#FF298E;">♥</span>
+              <span id="txt-settings-donate">Support (Crypto)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2602,6 +2665,29 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             <span id="c-about-gh-label">github.com/Hesvm</span>
           </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crypto Support Modal (Vibekit Crypto Networks) -->
+    <div class="c-onboard-backdrop" id="copilot-donate-backdrop">
+      <div class="c-onboard-modal" role="dialog" aria-modal="true" style="max-width:332px;">
+        <div class="c-onboard-top">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="color:#FF298E; font-size:15px;">♥</span>
+            <span class="c-onboard-title" id="c-donate-title">Support Development</span>
+          </div>
+          <button class="c-about-close" id="copilot-donate-close" style="position:static;" title="Close">✕</button>
+        </div>
+        <div class="c-onboard-sub" id="c-donate-sub">Your crypto support keeps this open-source Figma Copilot growing faster.</div>
+        <div class="c-donate-tabs" id="c-donate-tabs"></div>
+        <div class="c-donate-box" id="c-donate-box">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <span id="c-donate-net-name" style="font-size:12px; font-weight:700; color:var(--c-text);">USDT · BEP-20</span>
+            <span id="c-donate-net-sub" style="font-size:10px; font-weight:600; color:var(--c-text-muted);">BNB Smart Chain</span>
+          </div>
+          <div class="c-donate-addr" id="c-donate-addr">0x73aCd9Cae9a289C2b6EA3c689E1ed737cd047384</div>
+          <button type="button" class="c-onboard-btn primary" id="c-donate-copy-btn" style="width:100%;">Copy Wallet Address</button>
         </div>
       </div>
     </div>
@@ -5252,6 +5338,7 @@
     var elProv = document.getElementById('txt-settings-provider'); if (elProv) elProv.textContent = dict.provider;
     var elMcp = document.getElementById('txt-settings-mcp'); if (elMcp) elMcp.textContent = dict.mcp;
     var elGuide = document.getElementById('txt-settings-guide'); if (elGuide) elGuide.textContent = isFa ? 'راهنمای راه‌اندازی (۰ تا ۱۰۰)' : 'Setup Guide (0 → 100)';
+    var elDonate = document.getElementById('txt-settings-donate'); if (elDonate) elDonate.textContent = isFa ? 'حمایت مالی (کریپتو)' : 'Support (Crypto)';
     var elSetupHint = document.getElementById('c-bridge-setup-hint'); if (elSetupHint) elSetupHint.textContent = dict.setupHint;
     var elCopySetup = document.getElementById('c-copy-setup-btn'); if (elCopySetup) elCopySetup.textContent = dict.copySetup;
     var elMenuHdr = document.querySelector('#ag-model-menu .ag-menu-header'); if (elMenuHdr) elMenuHdr.textContent = dict.model;
@@ -5309,6 +5396,9 @@
     });
     if (typeof renderOnboardingStep === 'function' && onboardBackdrop && onboardBackdrop.classList.contains('open')) {
       renderOnboardingStep();
+    }
+    if (typeof renderDonateModal === 'function' && donateBackdrop && donateBackdrop.classList.contains('open')) {
+      renderDonateModal();
     }
   }
 
@@ -6707,6 +6797,107 @@
     b.cardTitle.textContent = isFa ? 'Product Card · Auto Layout اعمال شد' : 'Pricing Card · Auto Layout applied';
     b.cardSub.textContent = isFa ? 'Gemini 4 Neon Medium · ۳.۴ ثانیه' : 'Gemini 4 Neon Medium · 3.8s';
     messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  // Crypto Support Modal (exact Vibekit crypto networks, without bank card)
+  var CRYPTO_NETWORKS = [
+    {
+      id: 'usdt-bep20',
+      name: 'USDT',
+      badge: 'BEP-20',
+      network: 'BEP-20 (BNB Smart Chain)',
+      address: '0x73aCd9Cae9a289C2b6EA3c689E1ed737cd047384',
+      svg: '<svg width="20" height="20" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#26A17B"/><path d="M17.92 17.57c-.1.01-.58.04-1.92.04-1.07 0-1.74-.03-1.92-.04-4.22-.19-7.37-.89-7.37-1.73s3.15-1.54 7.37-1.73v2.75c.18.02.87.05 1.94.05 1.29 0 1.81-.03 1.9-.05V14.1c4.21.19 7.35.89 7.35 1.73s-3.14 1.54-7.35 1.74zm0-3.75V11.2h4.86V8.34H9.22V11.2h4.86v2.62C9.48 14.04 6 14.86 6 15.87c0 1.02 3.48 1.84 8.08 2.05v8.13h3.84v-8.13c4.6-.21 8.08-1.03 8.08-2.05 0-1.01-3.48-1.83-8.08-2.05z" fill="#FFF"/></svg>'
+    },
+    {
+      id: 'usdt-trc20',
+      name: 'USDT',
+      badge: 'TRC-20',
+      network: 'TRC-20 (Tron)',
+      address: 'TDdTiWFTKZvn3dJvi9bxkDemMnA43vDgyy',
+      svg: '<svg width="20" height="20" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#26A17B"/><path d="M17.92 17.57c-.1.01-.58.04-1.92.04-1.07 0-1.74-.03-1.92-.04-4.22-.19-7.37-.89-7.37-1.73s3.15-1.54 7.37-1.73v2.75c.18.02.87.05 1.94.05 1.29 0 1.81-.03 1.9-.05V14.1c4.21.19 7.35.89 7.35 1.73s-3.14 1.54-7.35 1.74zm0-3.75V11.2h4.86V8.34H9.22V11.2h4.86v2.62C9.48 14.04 6 14.86 6 15.87c0 1.02 3.48 1.84 8.08 2.05v8.13h3.84v-8.13c4.6-.21 8.08-1.03 8.08-2.05 0-1.01-3.48-1.83-8.08-2.05z" fill="#FFF"/><circle cx="25" cy="25" r="5" fill="#EF0027"/></svg>'
+    },
+    {
+      id: 'sol',
+      name: 'SOL',
+      badge: 'Solana',
+      network: 'Solana Network',
+      address: '3JS3Gc5uorKo99ggqXPQywWa4uvs1VSgARo7FB9TzNhq',
+      svg: '<svg width="20" height="20" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#18181B"/><path d="M9.5 20.3c.2-.2.4-.3.7-.3h12.2c.4 0 .6.5.3.8l-1.9 1.9c-.2.2-.4.3-.7.3H7.9c-.4 0-.6-.5-.3-.8l1.9-1.9zm0-5.2c.2-.2.4-.3.7-.3h12.2c.4 0 .6.5.3.8l-1.9 1.9c-.2.2-.4.3-.7.3H7.9c-.4 0-.6-.5-.3-.8l1.9-1.9zm12.9-5.1c-.2-.2-.4-.3-.7-.3H9.5c-.4 0-.6.5-.3.8l1.9 1.9c.2.2.4.3.7.3h12.2c.4 0 .6-.5.3-.8l-1.9-1.9z" fill="#14F195"/></svg>'
+    },
+    {
+      id: 'ton',
+      name: 'TON',
+      badge: 'TON',
+      network: 'The Open Network',
+      address: 'UQCMV4ZU5oUt4zolv_oIFj-eqa0Ab5YZdg8GML2Xqj4JpSrx',
+      svg: '<svg width="20" height="20" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#0098EA"/><path d="M21.8 9.8H10.2c-1.8 0-2.9 1.9-2 3.4l6.9 11.4c.4.7 1.4.7 1.8 0l6.9-11.4c.9-1.5-.2-3.4-2-3.4zm-6.4 11.8l-4.9-8.1c-.2-.3 0-.7.4-.7h4.5v8.8zm1.2 0v-8.8h4.5c.4 0 .6.4.4.7l-4.9 8.1z" fill="#FFF"/></svg>'
+    }
+  ];
+  var activeCryptoIdx = 0;
+  var donateBackdrop = document.getElementById('copilot-donate-backdrop');
+  var donateCloseBtn = document.getElementById('copilot-donate-close');
+  var openDonateBtn = document.getElementById('copilot-open-donate-btn');
+  var donateTabsEl = document.getElementById('c-donate-tabs');
+  var donateCopyBtn = document.getElementById('c-donate-copy-btn');
+
+  function renderDonateModal() {
+    var isFa = currentLang === 'fa';
+    var tEl = document.getElementById('c-donate-title');
+    var sEl = document.getElementById('c-donate-sub');
+    var nEl = document.getElementById('c-donate-net-name');
+    var nsEl = document.getElementById('c-donate-net-sub');
+    var aEl = document.getElementById('c-donate-addr');
+    if (tEl) tEl.textContent = isFa ? 'حمایت مالی (کریپتو)' : 'Support Development';
+    if (sEl) sEl.textContent = isFa
+      ? 'حمایتت باعث می‌شه این مسیر رو سریع‌تر و قوی‌تر جلو ببریم. مرسی ازت ♥'
+      : 'Your support helps keep this open-source Figma Copilot growing faster.';
+    if (donateCopyBtn) donateCopyBtn.textContent = isFa ? 'کپی آدرس کیف پول' : 'Copy Wallet Address';
+
+    var cur = CRYPTO_NETWORKS[activeCryptoIdx] || CRYPTO_NETWORKS[0];
+    if (nEl) nEl.textContent = cur.name + ' · ' + cur.badge;
+    if (nsEl) nsEl.textContent = cur.network;
+    if (aEl) aEl.textContent = cur.address;
+
+    if (donateTabsEl) {
+      donateTabsEl.innerHTML = '';
+      CRYPTO_NETWORKS.forEach(function(item, idx) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'c-donate-tab' + (idx === activeCryptoIdx ? ' active' : '');
+        btn.innerHTML = item.svg + '<span>' + item.name + '</span><span class="c-donate-tab-sub">' + item.badge + '</span>';
+        btn.addEventListener('click', function() {
+          activeCryptoIdx = idx;
+          renderDonateModal();
+        });
+        donateTabsEl.appendChild(btn);
+      });
+    }
+  }
+
+  if (openDonateBtn && donateBackdrop) {
+    openDonateBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeAllPopovers();
+      renderDonateModal();
+      donateBackdrop.classList.add('open');
+    });
+  }
+  if (donateCloseBtn && donateBackdrop) {
+    donateCloseBtn.addEventListener('click', function() { donateBackdrop.classList.remove('open'); });
+    donateBackdrop.addEventListener('click', function(e) {
+      if (e.target === donateBackdrop) donateBackdrop.classList.remove('open');
+    });
+  }
+  if (donateCopyBtn) {
+    donateCopyBtn.addEventListener('click', function() {
+      var cur = CRYPTO_NETWORKS[activeCryptoIdx] || CRYPTO_NETWORKS[0];
+      copyTextSafely(cur.address);
+      donateCopyBtn.textContent = currentLang === 'fa' ? 'کپی شد ✓' : 'Copied ✓';
+      setTimeout(function() {
+        donateCopyBtn.textContent = currentLang === 'fa' ? 'کپی آدرس کیف پول' : 'Copy Wallet Address';
+      }, 1800);
+    });
   }
 
   // Interactive 0-to-100 Onboarding Wizard
