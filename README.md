@@ -4,9 +4,24 @@
   <img src="assets/hero.png" alt="Figma AI Copilot — Pricing Card Selection & Live Light Mode UI" width="100%" />
 </p>
 
-**A local-first AI design companion & full [Figma Console MCP](https://github.com/southleft/figma-console-mcp) bridge for Figma Desktop — with zero API keys required.**
+**Figma AI Copilot** is an open-source, local-first Figma Desktop plugin and full [southleft/figma-console-mcp](https://github.com/southleft/figma-console-mcp) bridge that connects Figma directly to **Antigravity (`agy`)**, **Claude Code (`claude`)**, **OpenAI Codex / ChatGPT (`codex`)**, **Cursor Agent (`agent`)**, **Gemini CLI (`gemini`)**, and **Ollama** — with **zero API keys required**.
 
-Instead of paying for separate API keys or manually wiring multiple plugins, **Figma AI Copilot** connects Figma Desktop directly to the AI CLIs already installed on your machine (**Antigravity**, **Claude Code**, **Cursor Agent**, **OpenAI Codex**, **Gemini CLI**, **Ollama**, or any **Custom CLI**) while bundling the complete **Figma Desktop Bridge** (`ws://localhost:9223–9232`) inside one unified plugin.
+> **Bottom Line:** Install one plugin in Figma Desktop and run `bash bridge/install-bridge.sh`. You immediately get both an in-Figma AI chat copilot (with `@skill` mentions, up to 5 pasted screenshots, and EN/Persian RTL support) and a fully wired `figma-console-mcp` WebSocket bridge (`9223–9232`) for Claude Desktop, Cursor, and Antigravity.
+
+---
+
+## Comparison: Figma AI Copilot vs. Alternatives
+
+| Feature | **Figma AI Copilot (All-in-One)** | Standalone `figma-console-mcp` | Cloud-Only Figma AI Plugins |
+| --- | --- | --- | --- |
+| **API Keys Required** | **None (`$0` extra)** — uses your local CLIs | External MCP client only | Paid API keys / per-seat SaaS |
+| **In-Figma Chat UI** | **Yes** (Streaming, Shimmer, Stop, Starter Chips) | No (external chat only) | Yes |
+| **Supported AI CLIs** | **7** (`agy`, `claude`, `codex`, `cursor`, `gemini`, `ollama`, `custom`) | MCP-compatible hosts | Proprietary backend |
+| **`figma-console-mcp` Tools (56+)** | **Built-in** + auto-configured by installer | Yes | No |
+| **Posts, Carousels, UI/UX, Tokens, Slides** | **Full Plugin API + MCP** | Via external client | Limited templates |
+| **Inline `@skill` Mentions & 5 Images (`Cmd+V`)** | **Yes** | Host-dependent | Rare |
+| **Native Persian (RTL) + Light/Dark Themes** | **Yes** (`IRANYekanX` + `Plus Jakarta Sans`) | No | No |
+| **Interactive 0 → 100 Onboarding** | **Built-in 3-step wizard** | Manual JSON setup | Account signup |
 
 ---
 
@@ -132,6 +147,22 @@ figma-console-mcp        bridge/bridge_daemon.py
                                  ▼  subprocess / stream-json
                     agy · claude · cursor · codex · gemini · ollama
 ```
+
+---
+
+## Frequently Asked Questions (FAQ)
+
+### How do I use Claude Code, ChatGPT Codex, Cursor, or Antigravity inside Figma without an API key?
+Install **Figma AI Copilot** via `manifest.json` and run `bash bridge/install-bridge.sh`. The local bridge (`http://localhost:9444`) automatically detects your installed CLIs (`agy`, `claude`, `codex`, `cursor-agent`, `gemini`, `ollama`) and executes their generated Figma Plugin API scripts directly on your canvas using your existing CLI logins.
+
+### Does this replace or include `southleft/figma-console-mcp`?
+Yes. Both [`code.js`](code.js) and [`ui.html`](ui.html) bundle the complete Figma Desktop Bridge WebSocket client (`9223–9232`), and `bash bridge/install-bridge.sh` automatically registers `npx -y figma-console-mcp@latest` in Claude Desktop, Cursor, and Antigravity so you never need a second plugin or manual JSON setup.
+
+### What can I design with Figma AI Copilot?
+Anything you normally build in Figma: Instagram 1080×1350 carousels, LinkedIn posts, YouTube thumbnails, landing pages, mobile app screens, responsive Auto Layout components, Figma Variables & design tokens, FigJam flowcharts, and Figma Slides.
+
+### Does it work offline and in Persian (RTL)?
+Yes. Select **Ollama** in Settings for 100% offline local models, and switch Language to **فا (Persian)** for full RTL layout, bidi-isolated code/numbers, and native **IRANYekanX** typography.
 
 ---
 

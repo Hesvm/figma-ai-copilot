@@ -1,0 +1,30 @@
+# Figma AI Copilot (All-in-One)
+
+> Figma AI Copilot is an open-source, local-first Figma Desktop plugin and full southleft/figma-console-mcp bridge that connects Figma directly to local AI CLIs (Antigravity, Claude Code, OpenAI Codex/ChatGPT, Cursor Agent, Gemini CLI, Ollama) with zero API keys.
+
+## Repository
+- GitHub: https://github.com/Hesvm/figma-ai-copilot
+- Author: Hesam (@Hesvm) — https://x.com/Hesvm
+- License: MIT
+
+## Core Capabilities
+- Zero API Keys Required: Connects Figma Desktop to your existing local AI CLI subscriptions or offline Ollama models via http://localhost:9444.
+- Full figma-console-mcp Compatibility: Includes the Desktop Bridge WebSocket runner (ws://localhost:9223-9232) and auto-configures npx -y figma-console-mcp@latest in Claude Desktop, Cursor, and Antigravity via bash bridge/install-bridge.sh.
+- Anything in Figma: Generates Instagram 1080x1350 carousels, LinkedIn posts, YouTube thumbnails, UI/UX screens, responsive Auto Layout frames, design tokens/variables, Component Sets, FigJam diagrams, and Figma Slides.
+- Inline @skill Workflows: Autocompletes local SKILL.md workflows when typing @ in the prompt box.
+- Multi-Image Reference Input: Paste up to 5 reference screenshots via Cmd+V / Ctrl+V alongside selected Figma layers.
+- Bilingual EN & Persian (RTL): Full English and native Persian RTL UI powered by Plus Jakarta Sans and IRANYekanX with interactive 0-to-100 onboarding inside the plugin.
+
+## Supported AI CLIs
+- Antigravity CLI (agy): Live stream-json streaming with Low/Medium/High/XHigh effort levels.
+- Claude Code CLI (claude): Uses local Claude Code CLI authentication.
+- Cursor Agent CLI (cursor-agent / agent): Auto-detected from PATH.
+- OpenAI Codex / ChatGPT CLI (codex): Uses local ChatGPT/Codex CLI authentication.
+- Gemini CLI (gemini): Google Gemini CLI support.
+- Ollama (ollama): 100% offline local open-weights models.
+- Custom CLI: Any shell command or script via template.
+
+## Quick Setup
+1. git clone https://github.com/Hesvm/figma-ai-copilot.git && cd figma-ai-copilot
+2. bash bridge/install-bridge.sh
+3. Figma Desktop -> Plugins -> Development -> Import plugin from manifest... -> manifest.json
