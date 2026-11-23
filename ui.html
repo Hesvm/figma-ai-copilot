@@ -1134,6 +1134,156 @@
     }
     .c-about-link.secondary:hover { background: var(--c-menu-hover); }
 
+    /* Interactive 0-to-100 Onboarding Wizard */
+    .c-onboard-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 18, 0.36);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 5200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: cFadeIn 0.18s ease;
+    }
+    .c-onboard-backdrop.open { display: flex; }
+
+    .c-onboard-modal {
+      width: 100%;
+      max-width: 326px;
+      background: var(--c-menu-bg);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--c-border-strong);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.24);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      animation: cSpringPop 0.26s var(--spring-bounce);
+      text-align: left;
+    }
+    #copilot-main-container[dir="rtl"] .c-onboard-modal { text-align: right; }
+
+    .c-onboard-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .c-onboard-dots { display: flex; align-items: center; gap: 5px; }
+    .c-onboard-dot {
+      width: 18px;
+      height: 5px;
+      border-radius: 99px;
+      background: var(--c-border-strong);
+      transition: all 0.2s ease;
+    }
+    .c-onboard-dot.active { width: 28px; background: #FF298E; }
+    .c-onboard-dot.done { background: #10b981; }
+
+    .c-onboard-title { font-size: 15px; font-weight: 700; color: var(--c-text); line-height: 1.35; }
+    .c-onboard-sub { font-size: 12px; color: var(--c-text-muted); line-height: 1.55; }
+
+    .c-onboard-list { display: flex; flex-direction: column; gap: 8px; }
+    .c-onboard-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      background: var(--c-surface-soft);
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: var(--c-text);
+    }
+    .c-onboard-ico {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      background: var(--c-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .c-onboard-cmd {
+      padding: 9px 11px;
+      border-radius: 11px;
+      background: var(--c-surface-soft);
+      border: 1px solid var(--c-border);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      color: var(--c-text);
+      direction: ltr;
+      text-align: left;
+      word-break: break-all;
+      user-select: all;
+    }
+
+    .c-onboard-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .c-onboard-cli-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .c-onboard-cli-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      background: var(--c-surface-soft);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--c-text);
+      direction: ltr;
+    }
+
+    .c-onboard-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .c-onboard-btn {
+      padding: 8px 14px;
+      border-radius: 11px;
+      border: 1px solid var(--c-border);
+      background: var(--c-surface-soft);
+      color: var(--c-text);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.15s;
+    }
+    .c-onboard-btn:active { transform: scale(0.97); }
+    .c-onboard-btn.primary {
+      background: var(--c-accent);
+      color: var(--c-accent-fg);
+      border-color: transparent;
+      flex: 1;
+    }
+
     .header-title-pill {
       position: relative;
       z-index: 3;
@@ -2193,6 +2343,11 @@
                 <span id="copilot-header-state">Connecting...</span>
               </button>
             </div>
+
+            <button type="button" id="copilot-open-onboarding-btn" style="width:100%; margin-top:6px; padding:7px 10px; border-radius:10px; border:1px solid var(--c-border); background:var(--c-surface-soft); color:var(--c-text); font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <span>✦</span>
+              <span id="txt-settings-guide">Setup Guide (0 → 100)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2447,6 +2602,31 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             <span id="c-about-gh-label">github.com/Hesvm</span>
           </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive 0-to-100 Onboarding Wizard -->
+    <div class="c-onboard-backdrop" id="copilot-onboarding-backdrop">
+      <div class="c-onboard-modal" role="dialog" aria-modal="true">
+        <div class="c-onboard-top">
+          <div class="c-onboard-dots" id="c-onboard-dots">
+            <span class="c-onboard-dot active"></span>
+            <span class="c-onboard-dot"></span>
+            <span class="c-onboard-dot"></span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div class="c-seg" id="onboard-lang-seg" style="transform:scale(0.88);">
+              <button class="c-seg-btn active" data-lang="en">EN</button>
+              <button class="c-seg-btn" data-lang="fa">فا</button>
+            </div>
+            <button class="c-about-close" id="copilot-onboard-close" style="position:static;" title="Close">✕</button>
+          </div>
+        </div>
+        <div id="c-onboard-body"></div>
+        <div class="c-onboard-footer">
+          <button type="button" class="c-onboard-btn" id="c-onboard-back" style="display:none;">Back</button>
+          <button type="button" class="c-onboard-btn primary" id="c-onboard-next">Next →</button>
         </div>
       </div>
     </div>
@@ -5071,6 +5251,7 @@
     var elTheme = document.getElementById('txt-settings-theme'); if (elTheme) elTheme.textContent = dict.theme;
     var elProv = document.getElementById('txt-settings-provider'); if (elProv) elProv.textContent = dict.provider;
     var elMcp = document.getElementById('txt-settings-mcp'); if (elMcp) elMcp.textContent = dict.mcp;
+    var elGuide = document.getElementById('txt-settings-guide'); if (elGuide) elGuide.textContent = isFa ? 'راهنمای راه‌اندازی (۰ تا ۱۰۰)' : 'Setup Guide (0 → 100)';
     var elSetupHint = document.getElementById('c-bridge-setup-hint'); if (elSetupHint) elSetupHint.textContent = dict.setupHint;
     var elCopySetup = document.getElementById('c-copy-setup-btn'); if (elCopySetup) elCopySetup.textContent = dict.copySetup;
     var elMenuHdr = document.querySelector('#ag-model-menu .ag-menu-header'); if (elMenuHdr) elMenuHdr.textContent = dict.model;
@@ -5122,10 +5303,13 @@
     }
     renderStarterChips();
 
-    document.querySelectorAll('#lang-seg .c-seg-btn').forEach(function(btn) {
+    document.querySelectorAll('#lang-seg .c-seg-btn, #onboard-lang-seg .c-seg-btn').forEach(function(btn) {
       if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
       else btn.classList.remove('active');
     });
+    if (typeof renderOnboardingStep === 'function' && onboardBackdrop && onboardBackdrop.classList.contains('open')) {
+      renderOnboardingStep();
+    }
   }
 
   // Theme management (Light default, toggleable to Warm Dark)
@@ -6525,6 +6709,187 @@
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
+  // Interactive 0-to-100 Onboarding Wizard
+  var onboardBackdrop = document.getElementById('copilot-onboarding-backdrop');
+  var onboardCloseBtn = document.getElementById('copilot-onboard-close');
+  var onboardBody = document.getElementById('c-onboard-body');
+  var onboardBackBtn = document.getElementById('c-onboard-back');
+  var onboardNextBtn = document.getElementById('c-onboard-next');
+  var openOnboardBtn = document.getElementById('copilot-open-onboarding-btn');
+  var onboardStep = 0;
+  var onboardBridgeReady = false;
+  var onboardPollTimer = null;
+
+  function checkOnboardBridge() {
+    return fetch(BRIDGE_URL + '/providers')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        onboardBridgeReady = true;
+        if (data && Array.isArray(data.providers)) {
+          data.providers.forEach(function(p) { detectedProvidersMap[p.id] = p; });
+        }
+        return true;
+      })
+      .catch(function() {
+        onboardBridgeReady = false;
+        return false;
+      });
+  }
+
+  function renderOnboardingStep() {
+    if (!onboardBody) return;
+    var isFa = currentLang === 'fa';
+    var dots = document.querySelectorAll('#c-onboard-dots .c-onboard-dot');
+    dots.forEach(function(d, idx) {
+      d.className = 'c-onboard-dot' + (idx === onboardStep ? ' active' : (idx < onboardStep ? ' done' : ''));
+    });
+
+    if (onboardBackBtn) {
+      onboardBackBtn.style.display = onboardStep > 0 ? 'inline-block' : 'none';
+      onboardBackBtn.textContent = isFa ? 'قبلی' : 'Back';
+    }
+    if (onboardNextBtn) {
+      if (onboardStep === 2) onboardNextBtn.textContent = isFa ? 'شروع طراحی ←' : 'Start Designing →';
+      else onboardNextBtn.textContent = isFa ? 'مرحله بعد' : 'Next →';
+    }
+
+    if (onboardStep === 0) {
+      onboardBody.innerHTML = isFa ? (
+        '<div class="c-onboard-title">به Figma AI Copilot خوش آمدید</div>' +
+        '<div class="c-onboard-sub" style="margin-top:4px;">دستیار هوشمند محلی برای فیگما — بدون نیاز به API Key و متصل به تمام ابزارهای هوش مصنوعی سیستم شما.</div>' +
+        '<div class="c-onboard-list" style="margin-top:10px;">' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">⚡</span><div><b>تغییر زنده روی بوم:</b> با زبان ساده بگویید تا Auto Layout، استایل‌ها و کامپوننت‌ها مستقیم ساخته شوند.</div></div>' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">🔌</span><div><b>اتصال یکپارچه CLI + MCP:</b> پشتیبانی از Antigravity، Claude Code، Cursor، Codex و تمام ابزارهای <bdi dir="ltr">figma-console-mcp</bdi>.</div></div>' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">🎨</span><div><b>پشتیبانی از <bdi dir="ltr">@skill</bdi> و ۵ تصویر:</b> اسکرین‌شات پیست کنید (<bdi dir="ltr">Cmd+V</bdi>) و اسکیل‌هایتان را منشن کنید.</div></div>' +
+        '</div>'
+      ) : (
+        '<div class="c-onboard-title">Welcome to Figma AI Copilot</div>' +
+        '<div class="c-onboard-sub" style="margin-top:4px;">Your local-first AI design companion — zero API keys, powered by your installed CLIs &amp; built-in Figma Console MCP.</div>' +
+        '<div class="c-onboard-list" style="margin-top:10px;">' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">⚡</span><div><b>Direct Canvas Control:</b> Describe Auto Layout, styling, or component edits in plain language.</div></div>' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">🔌</span><div><b>All-in-One CLI + MCP Bridge:</b> Auto-connects Antigravity, Claude Code, Cursor, Codex &amp; <b>figma-console-mcp</b>.</div></div>' +
+          '<div class="c-onboard-item"><span class="c-onboard-ico">🎨</span><div><b>@skill Mentions &amp; 5 Images:</b> Paste reference shots (<bdi dir="ltr">Cmd+V</bdi>) and invoke your local skills.</div></div>' +
+        '</div>'
+      );
+    } else if (onboardStep === 1) {
+      var stBg = onboardBridgeReady ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)';
+      var stColor = onboardBridgeReady ? '#10b981' : '#d97706';
+      var stLabel = onboardBridgeReady
+        ? (isFa ? '● پل لوکال و MCP متصل است (پورت ۹۴۴۴)' : '● Bridge & MCP Connected (Port 9444)')
+        : (isFa ? '● منتظر اجرای دستور در ترمینال...' : '● Waiting for local bridge on port 9444...');
+      var installCmd = 'bash bridge/install-bridge.sh';
+      onboardBody.innerHTML =
+        '<div class="c-onboard-title">' + (isFa ? 'راه‌اندازی ۱-کلیکی پل لوکال و MCP' : '1-Step Local Bridge & MCP Setup') + '</div>' +
+        '<div class="c-onboard-sub" style="margin-top:4px;">' + (isFa
+          ? 'این دستور را یک‌بار داخل پوشه پروژه در ترمینال اجرا کنید تا هم سرویس لوکال (۹۴۴۴) و هم <code>figma-console-mcp</code> خودکار تنظیم شوند:'
+          : 'Run this once inside the repo folder to start the local bridge (9444) and auto-wire <code>figma-console-mcp</code>:') + '</div>' +
+        '<div class="c-onboard-status" style="margin-top:8px;background:' + stBg + ';color:' + stColor + ';">' + stLabel + '</div>' +
+        '<div class="c-onboard-cmd" style="margin-top:8px;">' + installCmd + '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:8px;">' +
+          '<button type="button" class="c-onboard-btn" id="c-onboard-copy-btn" style="flex:1;">' + (isFa ? 'کپی دستور' : 'Copy Command') + '</button>' +
+          '<button type="button" class="c-onboard-btn" id="c-onboard-test-btn">' + (isFa ? 'تست اتصال' : 'Test Connection') + '</button>' +
+        '</div>';
+
+      var cpBtn = document.getElementById('c-onboard-copy-btn');
+      var tsBtn = document.getElementById('c-onboard-test-btn');
+      if (cpBtn) {
+        cpBtn.addEventListener('click', function() {
+          copyTextSafely(installCmd);
+          cpBtn.textContent = isFa ? 'کپی شد ✓' : 'Copied ✓';
+          setTimeout(function() { cpBtn.textContent = isFa ? 'کپی دستور' : 'Copy Command'; }, 1800);
+        });
+      }
+      if (tsBtn) {
+        tsBtn.addEventListener('click', function() {
+          tsBtn.textContent = isFa ? 'در حال بررسی...' : 'Checking...';
+          checkOnboardBridge().then(function() {
+            checkBridgeHealth();
+            renderOnboardingStep();
+          });
+        });
+      }
+    } else {
+      var cliOrder = ['antigravity', 'claude', 'cursor', 'codex', 'gemini', 'ollama'];
+      var pillsHtml = cliOrder.map(function(id) {
+        var info = detectedProvidersMap[id];
+        var ok = info && info.available;
+        var nm = (info && info.name) ? info.name.replace(' CLI', '') : id;
+        return '<div class="c-onboard-cli-pill">' +
+          '<span style="width:7px;height:7px;border-radius:50%;background:' + (ok ? '#10b981' : '#9ca3af') + ';flex-shrink:0;"></span>' +
+          '<span>' + escapeHtml(nm) + '</span>' +
+        '</div>';
+      }).join('');
+      onboardBody.innerHTML =
+        '<div class="c-onboard-title">' + (isFa ? 'ابزارهای شناسایی‌شده و آماده کار!' : 'Detected CLIs — Ready to Design!') + '</div>' +
+        '<div class="c-onboard-sub" style="margin-top:4px;">' + (isFa
+          ? 'هر فریمی را روی بوم فیگما انتخاب کنید، با <code>@</code> اسکیل اضافه کنید و دستور را بفرستید. با <code>Cmd+Option+P</code> همیشه پلاگین سریع باز می‌شود.'
+          : 'Select any frame on canvas, type <code>@</code> to invoke a skill, or paste up to 5 reference images. Use <code>Cmd+Option+P</code> to re-run anytime.') + '</div>' +
+        '<div class="c-onboard-cli-grid" style="margin-top:10px;">' + pillsHtml + '</div>';
+    }
+  }
+
+  function openOnboarding(startAt) {
+    if (!onboardBackdrop) return;
+    onboardStep = typeof startAt === 'number' ? startAt : 0;
+    closeAllPopovers();
+    checkOnboardBridge().then(function() {
+      renderOnboardingStep();
+    });
+    onboardBackdrop.classList.add('open');
+    if (onboardPollTimer) clearInterval(onboardPollTimer);
+    onboardPollTimer = setInterval(function() {
+      if (!onboardBackdrop.classList.contains('open')) return;
+      if (onboardStep === 1 && !onboardBridgeReady) {
+        checkOnboardBridge().then(function(ok) {
+          if (ok) {
+            checkBridgeHealth();
+            renderOnboardingStep();
+          }
+        });
+      }
+    }, 2000);
+  }
+
+  function closeOnboarding() {
+    if (!onboardBackdrop) return;
+    onboardBackdrop.classList.remove('open');
+    if (onboardPollTimer) {
+      clearInterval(onboardPollTimer);
+      onboardPollTimer = null;
+    }
+    try { localStorage.setItem('copilot_onboarded_v1', '1'); } catch (_e) {}
+  }
+
+  if (openOnboardBtn) {
+    openOnboardBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openOnboarding(0);
+    });
+  }
+  if (onboardCloseBtn) onboardCloseBtn.addEventListener('click', closeOnboarding);
+  if (onboardBackdrop) {
+    onboardBackdrop.addEventListener('click', function(e) {
+      if (e.target === onboardBackdrop) closeOnboarding();
+    });
+  }
+  if (onboardBackBtn) {
+    onboardBackBtn.addEventListener('click', function() {
+      if (onboardStep > 0) { onboardStep--; renderOnboardingStep(); }
+    });
+  }
+  if (onboardNextBtn) {
+    onboardNextBtn.addEventListener('click', function() {
+      if (onboardStep < 2) { onboardStep++; renderOnboardingStep(); }
+      else closeOnboarding();
+    });
+  }
+  document.querySelectorAll('#onboard-lang-seg .c-seg-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      applyLanguage(btn.getAttribute('data-lang'));
+    });
+  });
+
   if (window.location && window.location.search) {
     if (window.location.search.indexOf('demo=1') !== -1) {
       setTimeout(runDemoShowcase, 250);
@@ -6533,6 +6898,12 @@
     } else if (window.location.search.indexOf('showcase=fa') !== -1) {
       setTimeout(function() { runCleanShowcase('fa'); }, 200);
     }
+  } else {
+    try {
+      if (!localStorage.getItem('copilot_onboarded_v1')) {
+        setTimeout(function() { openOnboarding(0); }, 350);
+      }
+    } catch (_e) {}
   }
 })();
 </script>
