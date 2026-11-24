@@ -1321,9 +1321,12 @@
       border-top: 1px solid var(--c-border);
     }
     .c-settings-action-pill {
-      height: 31px;
-      padding: 0 9px;
-      border-radius: 9px;
+      height: 32px;
+      padding: 0 8px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-radius: 10px;
       border: none;
       background: var(--c-surface-soft);
       color: var(--c-text);
@@ -2795,7 +2798,7 @@
           </span>
         </div>
         <div class="c-about-name" id="c-about-name">Hesam</div>
-        <div class="c-about-handle" id="c-about-handle">@Hesvm · Design Engineer</div>
+        <div class="c-about-handle" id="c-about-handle">@hesvvm · Design Engineer</div>
         <div class="c-about-bio" id="c-about-bio">All-in-one local AI copilot for Figma with multi-CLI support, live canvas control &amp; @skill workflows.</div>
         <div class="c-about-actions">
           <a class="c-about-link star" href="https://github.com/Hesvm/figma-ai-copilot" target="_blank" rel="noopener noreferrer">
@@ -5409,7 +5412,7 @@
       newChatStarted: 'New conversation started. Select a frame and enter your prompt.',
       bridgeError: 'Local bridge not reachable on port 9444.',
       aboutName: 'Hesam',
-      aboutHandleHtml: '<bdi dir="ltr">@Hesvm</bdi> · Design Engineer',
+      aboutHandleHtml: '<bdi dir="ltr">@hesvvm</bdi> · Design Engineer',
       aboutBioHtml: 'All-in-one local AI copilot for Figma with multi-CLI support, live canvas control &amp; <bdi dir="ltr">@skill</bdi> workflows.',
       aboutStarHtml: 'Star on GitHub',
       aboutXHtml: 'Follow <bdi dir="ltr">@hesvvm</bdi> on X',
@@ -5452,7 +5455,7 @@
       newChatStarted: 'گفتگوی جدید شروع شد. فریم مورد نظرت رو انتخاب کن و دستورت رو بنویس.',
       bridgeError: 'پل لوکال روی پورت ۹۴۴۴ در دسترس نیست.',
       aboutName: 'حسام',
-      aboutHandleHtml: '<bdi dir="ltr">@Hesvm</bdi> · مهندس دیزاین و هوش مصنوعی',
+      aboutHandleHtml: '<bdi dir="ltr">@hesvvm</bdi> · مهندس دیزاین و هوش مصنوعی',
       aboutBioHtml: 'کوپایلوت لوکال و همه‌کاره برای فیگما با پشتیبانی از <bdi dir="ltr">CLI</bdi>‌های مختلف، کنترل زنده بوم و اجرای اسکیل‌ها.',
       aboutStarHtml: 'ستاره در گیت‌هاب (<bdi dir="ltr">Star</bdi>)',
       aboutXHtml: 'دنبال کردن <bdi dir="ltr">@hesvvm</bdi> در <bdi dir="ltr">X</bdi>',
@@ -5489,8 +5492,8 @@
     var elTheme = document.getElementById('txt-settings-theme'); if (elTheme) elTheme.textContent = dict.theme;
     var elProv = document.getElementById('txt-settings-provider'); if (elProv) elProv.textContent = dict.provider;
     var elMcp = document.getElementById('txt-settings-mcp'); if (elMcp) elMcp.textContent = dict.mcp;
-    var elGuide = document.getElementById('txt-settings-guide'); if (elGuide) elGuide.textContent = isFa ? 'راهنمای راه‌اندازی (۰ تا ۱۰۰)' : 'Setup Guide (0 → 100)';
-    var elDonate = document.getElementById('txt-settings-donate'); if (elDonate) elDonate.textContent = isFa ? 'حمایت مالی (کریپتو)' : 'Support (Crypto)';
+    var elGuide = document.getElementById('txt-settings-guide'); if (elGuide) elGuide.textContent = isFa ? 'راهنما' : 'Guide';
+    var elDonate = document.getElementById('txt-settings-donate'); if (elDonate) elDonate.textContent = isFa ? 'حمایت' : 'Support';
     var elSetupHint = document.getElementById('c-bridge-setup-hint'); if (elSetupHint) elSetupHint.textContent = dict.setupHint;
     var elCopySetup = document.getElementById('c-copy-setup-btn'); if (elCopySetup) elCopySetup.textContent = dict.copySetup;
     var elMenuHdr = document.querySelector('#ag-model-menu .ag-menu-header'); if (elMenuHdr) elMenuHdr.textContent = dict.model;

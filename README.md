@@ -1,180 +1,214 @@
-# Figma AI Copilot (All-in-One)
+<div align="center">
+
+# 🖐️ Figma AI Copilot
+### *Your Terminal's AI Gods, Now Living Inside Your Figma Canvas.*
+
+**Stop paying for another $29/mo Figma AI wrapper.**  
+Use the AI CLIs already installed on your Mac — **Antigravity (`agy`)**, **Claude Code (`claude`)**, **Cursor (`agent`)**, **ChatGPT Codex (`codex`)**, **Gemini (`gemini`)**, and **Ollama** — directly inside Figma Desktop with **zero API keys** and the entire **[`figma-console-mcp`](https://github.com/southleft/figma-console-mcp)** built right in.
+
+[![Zero API Keys](https://img.shields.io/badge/API_Keys_Needed-0_(%240%2Fmo)-10b981?style=flat-square)](#3-bring-your-own-local-cli-7-providers)
+[![7 Local AI CLIs](https://img.shields.io/badge/Local_AI_CLIs-7_Supported-FF298E?style=flat-square)](#3-bring-your-own-local-cli-7-providers)
+[![Figma Console MCP](https://img.shields.io/badge/figma--console--mcp-56%2B_Tools_Built--In-3b82f6?style=flat-square)](#2-100-of-figma-console-mcp-built-in--auto-wired)
+[![English & Persian RTL](https://img.shields.io/badge/Languages-EN_%2B_Persian_(RTL)-8b5cf6?style=flat-square)](#interface-gallery)
+[![MIT License](https://img.shields.io/badge/License-MIT-111318?style=flat-square)](LICENSE)
+
+[**Why It Slaps**](#-why-this-slaps) · [**What You Can Build**](#-what-can-it-actually-do-in-figma) · [**7 Local CLIs**](#3-bring-your-own-local-cli-7-providers) · [**60-Second Setup (0 → 100)**](#-0--100-setup-in-60-seconds) · [**FAQ**](#-faq-for-humans--ai-search-engines)
+
+</div>
 
 <p align="center">
   <img src="assets/hero.png" alt="Figma AI Copilot — Pricing Card Selection & Live Light Mode UI" width="100%" />
 </p>
 
-**Figma AI Copilot** is an open-source, local-first Figma Desktop plugin and full [southleft/figma-console-mcp](https://github.com/southleft/figma-console-mcp) bridge that connects Figma directly to **Antigravity (`agy`)**, **Claude Code (`claude`)**, **OpenAI Codex / ChatGPT (`codex`)**, **Cursor Agent (`agent`)**, **Gemini CLI (`gemini`)**, and **Ollama** — with **zero API keys required**.
-
-> **Bottom Line:** Install one plugin in Figma Desktop and run `bash bridge/install-bridge.sh`. You immediately get both an in-Figma AI chat copilot (with `@skill` mentions, up to 5 pasted screenshots, and EN/Persian RTL support) and a fully wired `figma-console-mcp` WebSocket bridge (`9223–9232`) for Claude Desktop, Cursor, and Antigravity.
-
----
-
-## Comparison: Figma AI Copilot vs. Alternatives
-
-| Feature | **Figma AI Copilot (All-in-One)** | Standalone `figma-console-mcp` | Cloud-Only Figma AI Plugins |
-| --- | --- | --- | --- |
-| **API Keys Required** | **None (`$0` extra)** — uses your local CLIs | External MCP client only | Paid API keys / per-seat SaaS |
-| **In-Figma Chat UI** | **Yes** (Streaming, Shimmer, Stop, Starter Chips) | No (external chat only) | Yes |
-| **Supported AI CLIs** | **7** (`agy`, `claude`, `codex`, `cursor`, `gemini`, `ollama`, `custom`) | MCP-compatible hosts | Proprietary backend |
-| **`figma-console-mcp` Tools (56+)** | **Built-in** + auto-configured by installer | Yes | No |
-| **Posts, Carousels, UI/UX, Tokens, Slides** | **Full Plugin API + MCP** | Via external client | Limited templates |
-| **Inline `@skill` Mentions & 5 Images (`Cmd+V`)** | **Yes** | Host-dependent | Rare |
-| **Native Persian (RTL) + Light/Dark Themes** | **Yes** (`IRANYekanX` + `Plus Jakarta Sans`) | No | No |
-| **Interactive 0 → 100 Onboarding** | **Built-in 3-step wizard** | Manual JSON setup | Account signup |
+> [!TIP]
+> **TL;DR (The 15-Second Pitch):**  
+> Import one plugin into Figma Desktop and run `bash bridge/install-bridge.sh` once.  
+> You get a **live in-Figma AI Copilot** (with `@skill` mentions, up to 5 pasted reference images, and native Persian RTL) **PLUS** an always-on **`figma-console-mcp` WebSocket bridge (`9223–9232`)** auto-configured for Claude Desktop, Cursor, and Antigravity. No second plugin. No manual JSON surgery. No API keys.
 
 ---
 
-## Why This Exists
+## ⚡ Why This Slaps
 
-- **Zero API Keys, Zero Extra Cost** — Uses your existing local AI CLI subscriptions or local Ollama models via `http://localhost:9444`.
-- **All of `figma-console-mcp` Built In** — Includes the full Figma Desktop Bridge WebSocket runner in [`code.js`](code.js) & [`ui.html`](ui.html), and [`bridge/install-bridge.sh`](bridge/install-bridge.sh) automatically configures `figma-console-mcp` for Claude Desktop, Cursor, and Antigravity — so you don't need to install or maintain a second Figma plugin.
-- **Interactive 0 → 100 Onboarding Inside Figma** — First-time users get an interactive 3-step setup wizard inside the plugin with live bridge detection, 1-click command copy, and auto-detected CLI status.
-- **Built for Real Design Workflows** — Live streaming progress, collapsible activity logs, `@skill` workflow mentions, up to 5 pasted reference screenshots (`Cmd+V`), and native **English & Persian (RTL)** typography.
+Most "AI for Figma" tools force you into a bad deal: either buy another monthly subscription, paste your credit-card-backed API keys into a random third-party plugin, or copy-paste JSON back and forth between a terminal and Figma.
+
+**Figma AI Copilot fixes the whole workflow:**
+
+1. **💸 Zero API Keys, Zero Extra Bills** — Already logged into Claude Code, Cursor, ChatGPT Codex, Antigravity, or Gemini in your terminal? Or running local models on Ollama? You're already authenticated.
+2. **🔌 `southleft/figma-console-mcp` Included Out of the Box** — We bundled the entire 56+ tool Figma Desktop Bridge right into [`code.js`](code.js) & [`ui.html`](ui.html). Even better: our 1-click installer automatically wires `figma-console-mcp` into your Claude Desktop, Cursor, and Antigravity configs.
+3. **🎨 It Actually Touches Pixels (Not Just Chat)** — Selects your frame, reads the real layer tree (Auto Layout, tokens, padding, fills, typography), and runs live async Figma Plugin API code right in front of your eyes.
+4. **🧠 `@skill` Mentions + 5 Reference Screenshots (`Cmd+V`)** — Type `@` to pull in your custom `SKILL.md` playbooks and paste up to 5 inspiration shots from Mobbin, Pinterest, or Dribbble.
+5. **🌍 Native English & Persian (RTL)** — First-class bilingual UI with `Plus Jakarta Sans` for English and `IRANYekanX` for Persian, complete with proper bidi isolation so code and numbers never scramble.
 
 ---
 
-## Interface Gallery
+## 🥊 Head-to-Head Comparison
+
+| What Matters | **🖐️ Figma AI Copilot (All-in-One)** | Standalone `figma-console-mcp` | Typical SaaS Figma AI Plugins |
+| :--- | :--- | :--- | :--- |
+| **Monthly Cost / API Keys** | **$0 extra** (uses your local CLIs) | External MCP host required | $15–$30/mo or BYO paid API key |
+| **In-Figma Chat Window** | **Yes** (Streaming, Shimmer, Stop `■`, Chips) | No (external chat only) | Yes |
+| **Supported AI Engines** | **7 Local CLIs** (`agy`, `claude`, `cursor`, `codex`, `gemini`, `ollama`, custom) | MCP-compatible clients | Locked to 1 vendor |
+| **`figma-console-mcp` (56+ Tools)** | **Built-in + auto-wired by installer** | Yes (manual setup) | No |
+| **Social Posts, UI, Tokens, Slides** | **Full Plugin API + MCP tools** | Via external prompt | Rigid preset templates |
+| **Inline `@skill` + 5 Images (`Cmd+V`)** | **Yes** | Host-dependent | Rarely |
+| **Native Persian (RTL) + Light/Dark** | **Yes** (`IRANYekanX` + `Plus Jakarta Sans`) | No | No |
+| **0 → 100 Interactive Setup Wizard** | **Built right into the plugin** | Manual config files | Account signup wall |
+
+---
+
+## 🖼️ Interface Gallery
 
 <p align="center">
   <img src="assets/showcase-features.png" alt="Live Canvas Execution, Inline @skill Mentions, and Model & Effort Picker" width="100%" />
 </p>
 
 <p align="center">
-  <img src="assets/showcase-persian.png" alt="Native Persian (RTL) Typography with IRANYekanX" width="76%" />
+  <img src="assets/showcase-providers.png" alt="7 Local AI CLIs, 0 to 100 Interactive Setup Guide, and Auto-Detected Local CLIs" width="100%" />
 </p>
 
 <p align="center">
-  <img src="assets/showcase-settings.png" alt="Local Multi-CLI Settings and Creator Modal" width="90%" />
+  <img src="assets/showcase-settings.png" alt="Minimal Settings, Crypto Support with QR Code, and Creator & Live MCP Status" width="100%" />
 </p>
-
----
-
-## What You Can Build in Figma
-
-Because the Copilot runs full async Figma Plugin API scripts + `figma-console-mcp` tools directly on your canvas, it handles **anything you'd normally build in Figma**:
-
-- **Social Media Posts & Carousels** — Generate 1080×1350 Instagram carousels, LinkedIn visual posts, YouTube thumbnails, and promo banners from a prompt or reference image.
-- **UI/UX Screens & Components** — Design landing page sections, mobile app screens, dashboards, modals, and clean responsive Auto Layout components.
-- **Design Systems & Tokens** — Create and update Variables, color/spacing collections, Light/Dark mode themes, typography styles, and multi-variant Component Sets.
-- **FigJam Boards & Figma Slides** — Generate architecture flowcharts, sticky-note brainstorms, comparison tables, and multi-slide presentation decks.
-- **Reference-to-Figma & Audits** — Paste up to 5 screenshots (`Cmd+V`) to match a layout style, fix contrast/hierarchy issues, or convert English layouts into native **Persian (RTL)**.
-
----
-
-## Key Capabilities
-
-### 1. Direct Canvas AI Copilot
-- **Live Async Execution (`code.js`)** — Reads your selected frame tree (Auto Layout, padding, spacing, fills, corner radius, typography, children) and executes Figma Plugin API scripts (`dynamic-page` compliant) directly on your canvas.
-- **Streaming & Shimmer Activity** — Real-time NDJSON streaming with elapsed timer, luminous shimmer indicators, collapsible step logs (`Analyzed`, `Loaded`, `Thinking`, `Edited`), and instant **Stop (`■`)** cancellation.
-- **Inline `@skill` Mentions** — Type `@` in the prompt box to search and inject your local `SKILL.md` workflows (`~/.gemini/config/skills`, `~/.claude/skills`, `~/.cursor/skills`, `~/.agents/skills`).
-- **Up to 5 Reference Images** — Paste screenshots directly with `Cmd+V` / `Ctrl+V` or pick multiple images alongside your selected Figma frame.
-- **Cursor Pick Mode & Starter Chips** — Click the cursor icon to attach any layer on canvas, or test workflows immediately with localized Starter Chips.
-
-### 2. Full `southleft/figma-console-mcp` Compatibility
-Running this plugin automatically opens the Desktop Bridge WebSocket client (`9223–9232`) so any MCP-capable client (Claude Desktop, Cursor, Antigravity, Claude Code) gets full access to:
-- **Design Systems & Variables** — Inspect/create/update variables, collections, modes, styles, and component sets.
-- **Live Canvas & Execution** — Run arbitrary Plugin API code (`figma_execute`), capture live canvas screenshots (`figma_capture_screenshot`), inspect real-time plugin console logs, and audit accessibility/parity.
-- **FigJam & Figma Slides** — Create stickies, connectors, tables, diagrams, slides, and transitions.
-
-### 3. Supported Local AI Providers (Zero API Keys)
 
 <p align="center">
-  <img src="assets/showcase-providers.png" alt="Multi-CLI Provider Switcher & Auto-Detected CLIs Onboarding" width="90%" />
+  <img src="assets/showcase-persian.png" alt="Native Persian (RTL) Typography with IRANYekanX" width="88%" />
 </p>
-
-The local bridge automatically scans your `PATH` and shows a green **Ready** indicator for every AI CLI installed on your machine — switch between them anytime from **Settings → Provider**:
-
-| Provider | CLI Binary | Best For & Notes |
-| --- | --- | --- |
-| **Antigravity CLI** | `agy` | Live `stream-json` token & step streaming + Effort picker (`Low` / `Medium` / `High` / `XHigh`) |
-| **Claude Code CLI** | `claude` | Anthropic Claude models directly via your Claude Code CLI subscription with `@skill` context |
-| **Cursor Agent CLI** | `cursor-agent` / `agent` | Cursor's headless agent CLI auto-detected from PATH |
-| **OpenAI Codex (ChatGPT)** | `codex` | OpenAI / ChatGPT Codex CLI (`codex exec`) using your local ChatGPT/Codex auth |
-| **Gemini CLI** | `gemini` | Google Gemini CLI (`gemini -p`) |
-| **Ollama (Local)** | `ollama` | 100% offline local open-weights models |
-| **Custom CLI** | Any binary/script | Run any custom command template (`my-cli -p {prompt}`) |
 
 ---
 
-## 0 → 100 Setup Guide
+## 🛠️ What Can It Actually Do in Figma?
 
-### Prerequisites
+If a human can build it in Figma, the Copilot can script, refactor, or generate it on your canvas. A few real prompts you can throw at it today:
+
+| What You're Building | Example Prompt Inside the Plugin | What Happens on Canvas |
+| :--- | :--- | :--- |
+| **📱 Instagram Carousels & Social Posts** | *"Create a 5-slide 1080×1350 Instagram carousel for a SaaS launch using `@carousel` with bold typography and swipe cues."* | Generates 5 aligned `1080×1350` frames with Auto Layout, cover hook, slide numbering, and cohesive color tokens. |
+| **🧩 UI/UX Screens & Auto Layout Rescue** | *"Turn this messy pricing card into clean vertical Auto Layout with 24px padding, 16px gap, and a high-contrast CTA."* | Rebuilds the selected frame hierarchy into responsive Auto Layout without breaking your existing layers. |
+| **🎨 Design Systems, Variables & Tokens** | *"Create a Light & Dark color variable collection with neutral-50 to 900 and bind them to this dashboard."* | Creates Figma Variables, modes (`Light` / `Dark`), and binds fills/strokes across selected components. |
+| **📸 Reference-to-Figma (`Cmd+V` × 5)** | *(Paste 3 Mobbin screenshots)* *"Rebuild this checkout flow matching our font styles and 8px spacing grid."* | Reads all attached reference images alongside your current selection and constructs matching native Figma frames. |
+| **🇮🇷 English → Persian (RTL) Localization** | *"این کارت محصول رو به فارسی برگردون، چیدمان رو راست‌به‌چپ کن و فونت رو IRANYekanX بذار."* | Flips Auto Layout direction, mirrors icons/alignment, translates copy naturally, and applies Persian typography. |
+| **📊 FigJam Diagrams & Figma Slides** | *"Map out our auth microservice flow with sticky notes and connectors."* | Uses built-in FigJam & Slides tools to lay out structured boards and presentation decks. |
+
+---
+
+## 🔥 Core Superpowers
+
+### 1. Live In-Figma AI Copilot
+- **Direct Async Plugin API Execution (`code.js`)** — Inspects your selected node's full JSON tree and executes `dynamic-page`-safe Figma Plugin API code live on canvas.
+- **Real-Time Streaming & Shimmer Logs** — Watch every step (`Analyzed`, `Loaded`, `Thinking`, `Edited`) with an elapsed timer and an instant **Stop (`■`)** button if you change your mind mid-flight.
+- **Type `@` for Local Skills** — Autocompletes your local `SKILL.md` files from `~/.gemini/config/skills`, `~/.claude/skills`, `~/.cursor/skills`, and `~/.agents/skills`.
+- **Cursor Pick Mode** — Click the crosshair icon to grab any nested layer on canvas without losing your chat context.
+
+### 2. 100% of `figma-console-mcp` Built-In & Auto-Wired
+You don't need to install `figma-console-mcp`'s separate Desktop Bridge plugin. The moment **Figma AI Copilot** is open, it broadcasts on WebSocket ports `9223–9232` and unlocks all **56+ MCP tools** for external agents:
+- **Variables & Tokens:** `figma_setup_design_tokens`, `figma_batch_create_variables`, `figma_export_tokens`
+- **Components & Parity:** `figma_instantiate_component`, `figma_create_component_set`, `figma_check_design_parity`, `figma_audit_design_system`
+- **Live Canvas & Vision:** `figma_execute`, `figma_capture_screenshot`, `figma_get_console_logs`
+- **FigJam & Slides:** `figjam_create_sticky`, `figjam_auto_arrange`, `figma_create_slide`
+
+### 3. Bring Your Own Local CLI (7 Providers)
+Our lightweight Python daemon (`http://localhost:9444`) scans your `PATH` and lights up a green **● Ready** dot for every AI CLI installed on your computer. Switch engines mid-conversation from **Settings → Provider**:
+
+| Provider | CLI Binary | Why You'll Love It |
+| :--- | :--- | :--- |
+| **Antigravity CLI** | `agy` | Full `stream-json` live step streaming + Effort control (`Low` · `Medium` · `High` · `XHigh`) |
+| **Claude Code CLI** | `claude` | Runs Anthropic Claude directly through your Claude Code subscription + `@skill` playbooks |
+| **Cursor Agent CLI** | `cursor-agent` / `agent` | Uses Cursor's headless agent binary right from your terminal |
+| **OpenAI Codex (ChatGPT)** | `codex` | Runs `codex exec` powered by your local ChatGPT / OpenAI Codex login |
+| **Gemini CLI** | `gemini` | Fast Google Gemini CLI (`gemini -p`) |
+| **Ollama (Local)** | `ollama` | 100% offline, private, local open-weights models |
+| **Custom CLI** | Any command | Plug in any custom binary or wrapper script (`my-ai -p {prompt}`) |
+
+---
+
+## 🚀 0 → 100 Setup in 60 Seconds
+
+### What You Need
 - **Figma Desktop** (macOS / Windows / Linux)
-- **Python 3.9+** (pre-installed on macOS)
-- At least one supported AI CLI (`agy`, `claude`, `cursor-agent`, `codex`, `gemini`, or `ollama`)
-- *(Optional)* **Node.js 18+** if you want external MCP clients (`Claude Desktop`, `Cursor`, `Antigravity`) to also connect via `figma-console-mcp`
+- **Python 3.9+** (already on your Mac)
+- Any supported AI CLI (`agy`, `claude`, `cursor-agent`, `codex`, `gemini`, or `ollama`)
 
-### Step 1 — Clone the Repository
+### Step 1 — Clone It
 ```bash
 git clone https://github.com/Hesvm/figma-ai-copilot.git
 cd figma-ai-copilot
 ```
 
-### Step 2 — Run the 1-Click All-in-One Installer
+### Step 2 — Run the 1-Line Magic Installer
 ```bash
 bash bridge/install-bridge.sh
 ```
-This script automatically:
-1. Starts the **Local CLI Bridge** on `http://localhost:9444` (and installs a macOS LaunchAgent so it auto-starts on login).
-2. Auto-detects **Claude Desktop**, **Cursor**, and **Antigravity** configs and wires **`figma-console-mcp`** (`npx -y figma-console-mcp@latest`) if not already configured — zero manual JSON editing required.
+**What that one command does behind the scenes:**
+1. Starts the **Local CLI Bridge** on `http://localhost:9444` and registers a macOS `LaunchAgent` so it's always ready when you boot your Mac.
+2. Automatically checks your **Claude Desktop**, **Cursor**, and **Antigravity** config files and injects **`figma-console-mcp`** (`npx -y figma-console-mcp@latest`) if you don't already have it.
 
-*(Prefer running manually without LaunchAgent? Run `python3 bridge/bridge_daemon.py`.)*
+*(Want to run the daemon manually without a background service? Just run `python3 bridge/bridge_daemon.py`.)*
 
-### Step 3 — Import the Plugin in Figma Desktop
+### Step 3 — Drop `manifest.json` into Figma Desktop
 1. Open **Figma Desktop**.
-2. Go to **Plugins → Development → Import plugin from manifest...**
-3. Select `manifest.json` from the cloned `figma-ai-copilot` folder.
-4. Launch **Figma AI Copilot (All-in-One)** (`Cmd + Option + P` anytime to re-run).
+2. Head to **Plugins → Development → Import plugin from manifest...**
+3. Pick `manifest.json` from your `figma-ai-copilot` folder.
+4. Launch **Figma AI Copilot (All-in-One)** (pro tip: hit `Cmd + Option + P` to re-open it anytime).
 
-### Step 4 — Interactive Onboarding
-On first launch, the plugin opens a 3-step **Interactive Setup Wizard** (`EN / فا`) that verifies your local bridge connection live, lists all detected AI CLIs on your machine, and gets you designing in seconds. You can re-open it anytime from **Settings → Setup Guide (0 → 100)**.
-
----
-
-## Architecture
-
-```
-Figma Desktop Canvas
-   │
-   ▼  (Selection tree + async Plugin API execution)
-code.js  ◄── postMessage ──►  ui.html (Copilot UI + Onboarding + EN/FA RTL)
-   │                             │
-   │  ws://localhost:9223-9232   │  http://localhost:9444
-   ▼                             ▼
-figma-console-mcp        bridge/bridge_daemon.py
-(External MCP Clients)           │
-                                 ▼  subprocess / stream-json
-                    agy · claude · cursor · codex · gemini · ollama
-```
+### Step 4 — Follow the Interactive 3-Step Wizard
+On your first launch, a bilingual (`EN / فا`) **Interactive Setup Wizard** pops up inside the plugin, pings your local bridge live, shows every AI CLI detected on your machine, and drops you straight into the canvas. Need it again later? Click **Settings → Guide**.
 
 ---
 
-## Frequently Asked Questions (FAQ)
+## 🧬 How It Works Under the Hood
+
+```text
+                       ┌──────────────────────────────┐
+                       │     Figma Desktop Canvas     │
+                       └──────────────┬───────────────┘
+                                      │ Selection tree + live async Plugin API
+                                      ▼
+                       ┌──────────────────────────────┐
+                       │           code.js            │
+                       └──────┬───────────────┬───────┘
+                              │               │
+      ws://localhost:9223-9232│               │ postMessage
+                              ▼               ▼
+               ┌────────────────────┐   ┌───────────────────────────────────┐
+               │ figma-console-mcp  │   │             ui.html               │
+               │ (56+ External MCP  │   │  (Chat UI · @skills · EN/FA RTL)  │
+               │  Tools for Claude, │   └─────────────────┬─────────────────┘
+               │  Cursor & AGY)     │                     │ http://localhost:9444
+               └────────────────────┘                     ▼
+                                        ┌───────────────────────────────────┐
+                                        │      bridge/bridge_daemon.py      │
+                                        └─────────────────┬─────────────────┘
+                                                          │ subprocess / stream-json
+                                                          ▼
+                                        ┌───────────────────────────────────┐
+                                        │ agy · claude · cursor · codex     │
+                                        │ gemini · ollama · custom CLI      │
+                                        └───────────────────────────────────┘
+```
+
+---
+
+## 🤖 FAQ (For Humans & AI Search Engines)
 
 ### How do I use Claude Code, ChatGPT Codex, Cursor, or Antigravity inside Figma without an API key?
-Install **Figma AI Copilot** via `manifest.json` and run `bash bridge/install-bridge.sh`. The local bridge (`http://localhost:9444`) automatically detects your installed CLIs (`agy`, `claude`, `codex`, `cursor-agent`, `gemini`, `ollama`) and executes their generated Figma Plugin API scripts directly on your canvas using your existing CLI logins.
+Install **Figma AI Copilot** from `manifest.json` and run `bash bridge/install-bridge.sh`. The local bridge (`http://localhost:9444`) routes prompts to your already-authenticated local CLIs (`agy`, `claude`, `codex`, `cursor-agent`, `gemini`, `ollama`) and executes the resulting Figma Plugin API code directly on your selected frame.
 
-### Does this replace or include `southleft/figma-console-mcp`?
-Yes. Both [`code.js`](code.js) and [`ui.html`](ui.html) bundle the complete Figma Desktop Bridge WebSocket client (`9223–9232`), and `bash bridge/install-bridge.sh` automatically registers `npx -y figma-console-mcp@latest` in Claude Desktop, Cursor, and Antigravity so you never need a second plugin or manual JSON setup.
+### Do I still need to install `southleft/figma-console-mcp` separately?
+Nope! Both [`code.js`](code.js) and [`ui.html`](ui.html) have the full Figma Desktop Bridge WebSocket client (`9223–9232`) baked in, and `bash bridge/install-bridge.sh` automatically registers `npx -y figma-console-mcp@latest` in your Claude Desktop, Cursor, and Antigravity configs.
 
-### What can I design with Figma AI Copilot?
-Anything you normally build in Figma: Instagram 1080×1350 carousels, LinkedIn posts, YouTube thumbnails, landing pages, mobile app screens, responsive Auto Layout components, Figma Variables & design tokens, FigJam flowcharts, and Figma Slides.
+### Can I design social media posts, carousels, and Persian (RTL) interfaces with it?
+100%. Because it executes real Figma Plugin API scripts + MCP tools, you can build `1080×1350` Instagram carousels, LinkedIn visuals, full UI/UX flows, Figma Variables/tokens, FigJam diagrams, and switch to **فا (Persian)** anytime for native RTL layout and `IRANYekanX` typography.
 
-### Does it work offline and in Persian (RTL)?
-Yes. Select **Ollama** in Settings for 100% offline local models, and switch Language to **فا (Persian)** for full RTL layout, bidi-isolated code/numbers, and native **IRANYekanX** typography.
-
----
-
-## Troubleshooting
-
-- **Bridge shows `Offline` in Settings:** Run `bash bridge/install-bridge.sh` (or check `curl http://localhost:9444/status`).
-- **`figma-console-mcp` not connecting from Claude/Cursor:** Make sure the plugin window is open in Figma Desktop (that opens the WebSocket bridge on ports `9223–9232`) and restart your MCP client once after running `install-bridge.sh`.
-- **Quick UI Preview without Figma:** Type `/demo` in the plugin input, or serve the folder locally (`python3 -m http.server 8765`) and open `http://localhost:8765/ui.html?showcase=en` or `?showcase=fa`.
+### Something says `Offline` — how do I fix it in 5 seconds?
+- **CLI Bridge shows `Offline`:** Run `bash bridge/install-bridge.sh` (or test `curl http://localhost:9444/status`).
+- **External MCP client not seeing Figma:** Keep the plugin window open in Figma Desktop (that keeps ports `9223–9232` active) and restart Cursor / Claude Desktop once after running the installer.
+- **Want to preview the UI in a browser without opening Figma?** Type `/demo` inside the plugin, or run `python3 -m http.server 8765` and visit `http://localhost:8765/ui.html?showcase=en` (or `?showcase=fa`).
 
 ---
 
-## Author & License
+## 💜 Support & Creator
 
-Built by **Hesam** ([@Hesvm](https://github.com/Hesvm)) · [X / Twitter (@hesvvm)](https://x.com/hesvvm)  
-Licensed under the [MIT License](LICENSE). If this saved you time, consider giving the repo a ⭐!
+Built with obsessive craft by **Hesam** — [GitHub (`@Hesvm`)](https://github.com/Hesvm) · [X / Twitter (`@hesvvm`)](https://x.com/hesvvm)
+
+- **Support via Crypto:** Click **Settings → Support** inside the plugin to view instant QR codes and wallet addresses for **USDT (`BEP-20` / `TRC-20`)**, **Solana (`SOL`)**, and **Toncoin (`TON`)**.
+- **License:** [MIT](LICENSE) — free, open-source, and yours to hack on. If this saved your design workflow (or $30/mo), drop a ⭐ on the repo!
