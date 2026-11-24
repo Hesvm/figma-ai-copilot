@@ -5659,6 +5659,7 @@
       providerMenu.style.display = 'none';
     }
     updateProviderStatusBadge();
+    if (typeof loadAndRenderModels === 'function') loadAndRenderModels(false);
   }
 
   if (providerTrigger && providerMenu) {
@@ -5864,7 +5865,7 @@
     });
   }
 
-  // Model & Effort Picker
+  // Model & Effort Picker (Dynamic Live Sync with Local Bridge /models)
   var modelTrigger = document.getElementById('ag-model-trigger');
   var modelMenu = document.getElementById('ag-model-menu');
   var selectedModelName = document.getElementById('selected-model-name');
@@ -5875,7 +5876,202 @@
   var currentDisplayName = 'Gemini 3.8 Flash';
   var activeModel = 'gemini-3.8-flash-low';
 
+  if (modelMenu) {
+    modelMenu.style.maxHeight = '310px';
+    modelMenu.style.overflowY = 'auto';
+  }
+
+  function groupModelsFromApi(flatModels) {
+    var groups = [];
+    var byName = {};
+    (flatModels || []).forEach(function(m) {
+      if (!m || !m.id) return;
+      var label = String(m.label || m.id).trim();
+      var match = label.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+      var baseName = match ? match[1].trim() : label;
+      var tier = match ? match[2].trim() : '';
+      if (!byName[baseName]) {
+        byName[baseName] = {
+          name: baseName,
+          baseId: m.id.replace(/-(?:low|medium|high|xhigh)$/i, ''),
+          tiers: [],
+          variants: {}
+        };
+        groups.push(byName[baseName]);
+      }
+      var g = byName[baseName];
+      var tierKey = tier || 'Default';
+      if (g.tiers.indexOf(tierKey) === -1 && tier) g.tiers.push(tier);
+      g.variants[tierKey] = m.id;
+    });
+    return groups;
+  }
+
+  function closeAllSubmenus() {
+    if (!modelMenu) return;
+    modelMenu.querySelectorAll('.ag-submenu').forEach(function(sub) {
+      sub.style.display = 'none';
+    });
+    modelMenu.querySelectorAll('.ag-model-row').forEach(function(row) {
+      row.classList.remove('hovered');
+    });
+  }
+
+  function selectDynamicModel(exactId, effort, displayName, rowEl) {
+    currentBaseModel = exactId;
+    currentEffort = effort ? effort.toLowerCase() : '';
+    currentDisplayName = displayName;
+    activeModel = exactId;
+
+    if (modelMenu) {
+      modelMenu.querySelectorAll('.ag-model-row').forEach(function(r) {
+        r.classList.remove('selected');
+        var chk = r.querySelector('.ag-check-icon');
+        if (chk) chk.remove();
+      });
+    }
+    if (rowEl) {
+      rowEl.classList.add('selected');
+      var rightSide = rowEl.querySelector('.ag-model-right');
+      if (rightSide) {
+        var chkSpan = document.createElement('span');
+        chkSpan.className = 'ag-check-icon';
+        chkSpan.textContent = '✓';
+        rightSide.prepend(chkSpan);
+      }
+      var effortSpan = rowEl.querySelector('.ag-model-effort');
+      if (effortSpan) effortSpan.textContent = effort || '';
+    }
+    if (selectedModelName) selectedModelName.textContent = displayName;
+    if (selectedModelTier) selectedModelTier.textContent = effort || '';
+    closeAllSubmenus();
+    if (modelMenu) modelMenu.style.display = 'none';
+  }
+
+  function bindModelMenuEvents() {
+    if (!modelMenu) return;
+    var rows = modelMenu.querySelectorAll('.ag-model-row');
+    rows.forEach(function(row) {
+      var sub = row.querySelector('.ag-submenu');
+      row.addEventListener('mouseenter', function() {
+        closeAllSubmenus();
+        if (sub) {
+          row.classList.add('hovered');
+          sub.style.display = 'flex';
+        }
+      });
+      row.addEventListener('click', function(e) {
+        if (sub && sub.contains(e.target)) return;
+        e.stopPropagation();
+        var activeSub = sub ? sub.querySelector('.ag-sub-item.active') : null;
+        var effort = activeSub ? activeSub.getAttribute('data-effort') : (row.getAttribute('data-effort') || '');
+        var exactId = (activeSub && activeSub.getAttribute('data-id')) || row.getAttribute('data-id') || (effort ? row.getAttribute('data-base') + '-' + effort.toLowerCase() : row.getAttribute('data-base'));
+        selectDynamicModel(exactId, effort, row.getAttribute('data-name'), row);
+      });
+      if (sub) {
+        var subItems = sub.querySelectorAll('.ag-sub-item');
+        subItems.forEach(function(item) {
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            subItems.forEach(function(si) { si.classList.remove('active'); });
+            item.classList.add('active');
+            var effort = item.getAttribute('data-effort');
+            var exactId = item.getAttribute('data-id') || (row.getAttribute('data-base') + '-' + effort.toLowerCase());
+            row.setAttribute('data-effort', effort);
+            row.setAttribute('data-id', exactId);
+            selectDynamicModel(exactId, effort, row.getAttribute('data-name'), row);
+          });
+        });
+      }
+    });
+  }
+
+  function renderDynamicModels(flatModels) {
+    if (!modelMenu || !Array.isArray(flatModels) || flatModels.length === 0) return;
+    var groups = groupModelsFromApi(flatModels);
+    if (!groups.length) return;
+
+    var hdrText = (currentLang === 'fa') ? 'مدل' : 'Model';
+    modelMenu.innerHTML = '<div class="ag-menu-header">' + hdrText + '</div>';
+
+    var matchedActive = false;
+    groups.forEach(function(g) {
+      var hasTiers = g.tiers.length > 0;
+      var defTier = '';
+      if (hasTiers) {
+        defTier = g.tiers.indexOf('Medium') !== -1 ? 'Medium' : (g.tiers.indexOf('Low') !== -1 ? 'Low' : g.tiers[0]);
+      }
+      var isSelectedGroup = false;
+      var selectedTierForGroup = defTier;
+      Object.keys(g.variants).forEach(function(tk) {
+        if (g.variants[tk] === activeModel) {
+          isSelectedGroup = true;
+          matchedActive = true;
+          selectedTierForGroup = tk === 'Default' ? '' : tk;
+        }
+      });
+
+      var chosenId = isSelectedGroup ? activeModel : (hasTiers ? g.variants[defTier] : g.variants['Default']);
+      var row = document.createElement('div');
+      row.className = 'ag-model-row' + (hasTiers ? ' has-sub' : '') + (isSelectedGroup ? ' selected' : '');
+      row.setAttribute('data-base', g.baseId);
+      row.setAttribute('data-id', chosenId);
+      row.setAttribute('data-name', g.name);
+      row.setAttribute('data-effort', selectedTierForGroup);
+
+      var isNew = /carbon|neon|argon|hydrogen|5\.5/i.test(g.name);
+      var subHtml = '';
+      if (hasTiers) {
+        subHtml = '<div class="ag-submenu"><div class="ag-submenu-title">Effort Level</div>' +
+          g.tiers.map(function(t) {
+            var isAct = (selectedTierForGroup ? t === selectedTierForGroup : t === defTier);
+            return '<div class="ag-sub-item' + (isAct ? ' active' : '') + '" data-effort="' + escapeHtml(t) + '" data-id="' + escapeHtml(g.variants[t]) + '">' + escapeHtml(t) + '</div>';
+          }).join('') +
+        '</div>';
+      }
+
+      row.innerHTML =
+        '<div class="ag-model-left">' +
+          '<span class="ag-model-title">' + escapeHtml(g.name) + '</span>' +
+          (selectedTierForGroup ? '<span class="ag-model-effort">' + escapeHtml(selectedTierForGroup) + '</span>' : '') +
+        '</div>' +
+        '<div class="ag-model-right">' +
+          (isSelectedGroup ? '<span class="ag-check-icon">✓</span>' : '') +
+          (isNew ? '<span class="ag-badge-new">New ⓘ</span>' : '') +
+          (hasTiers ? '<span class="ag-arrow-icon">›</span>' : '') +
+        '</div>' +
+        subHtml;
+      modelMenu.appendChild(row);
+    });
+
+    if (!matchedActive && groups.length > 0) {
+      var first = groups[0];
+      var ft = first.tiers.length ? (first.tiers.indexOf('Medium') !== -1 ? 'Medium' : first.tiers[0]) : '';
+      var fid = ft ? first.variants[ft] : first.variants['Default'];
+      var firstRow = modelMenu.querySelector('.ag-model-row');
+      selectDynamicModel(fid, ft, first.name, firstRow);
+    }
+    bindModelMenuEvents();
+  }
+
+  function loadAndRenderModels(forceRefresh) {
+    if (!modelMenu) return Promise.resolve();
+    var prov = typeof activeProvider === 'string' ? activeProvider : 'antigravity';
+    var url = BRIDGE_URL + '/models?provider=' + encodeURIComponent(prov) + (forceRefresh ? '&refresh=1' : '');
+    return fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && Array.isArray(data.models) && data.models.length > 0) {
+          renderDynamicModels(data.models);
+        }
+      })
+      .catch(function() {});
+  }
+
   if (modelTrigger && modelMenu) {
+    bindModelMenuEvents();
+    loadAndRenderModels(false);
+
     modelTrigger.addEventListener('click', function(e) {
       e.stopPropagation();
       var isVisible = modelMenu.style.display === 'block';
@@ -5884,6 +6080,9 @@
         modelMenu.style.display = 'none';
         closeAllSubmenus();
       } else {
+        loadAndRenderModels(false).then(function() {
+          positionFloatingMenu(modelMenu);
+        });
         positionFloatingMenu(modelMenu);
         modelMenu.style.display = 'block';
         var selectedRow = modelMenu.querySelector('.ag-model-row.selected');
@@ -5904,80 +6103,6 @@
         closeAllSubmenus();
       }
     });
-
-    function closeAllSubmenus() {
-      modelMenu.querySelectorAll('.ag-submenu').forEach(function(sub) {
-        sub.style.display = 'none';
-      });
-      modelMenu.querySelectorAll('.ag-model-row').forEach(function(row) {
-        row.classList.remove('hovered');
-      });
-    }
-
-    var rows = modelMenu.querySelectorAll('.ag-model-row');
-    rows.forEach(function(row) {
-      var sub = row.querySelector('.ag-submenu');
-      row.addEventListener('mouseenter', function() {
-        closeAllSubmenus();
-        if (sub) {
-          row.classList.add('hovered');
-          sub.style.display = 'flex';
-        }
-      });
-
-      row.addEventListener('click', function(e) {
-        if (sub && sub.contains(e.target)) return;
-        e.stopPropagation();
-        var activeSub = sub ? sub.querySelector('.ag-sub-item.active') : null;
-        var defaultEffort = activeSub ? activeSub.getAttribute('data-effort') : (row.getAttribute('data-effort') || '');
-        selectModel(row.getAttribute('data-base'), defaultEffort, row.getAttribute('data-name'), row);
-      });
-
-      if (sub) {
-        var subItems = sub.querySelectorAll('.ag-sub-item');
-        subItems.forEach(function(item) {
-          item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            subItems.forEach(function(si) { si.classList.remove('active'); });
-            item.classList.add('active');
-            var effort = item.getAttribute('data-effort');
-            row.setAttribute('data-effort', effort);
-            selectModel(row.getAttribute('data-base'), effort, row.getAttribute('data-name'), row);
-          });
-        });
-      }
-    });
-
-    function selectModel(base, effort, displayName, rowEl) {
-      currentBaseModel = base;
-      currentEffort = effort ? effort.toLowerCase() : '';
-      currentDisplayName = displayName;
-
-      rows.forEach(function(r) {
-        r.classList.remove('selected');
-        var chk = r.querySelector('.ag-check-icon');
-        if (chk) chk.remove();
-      });
-
-      rowEl.classList.add('selected');
-      var rightSide = rowEl.querySelector('.ag-model-right');
-      if (rightSide) {
-        var chkSpan = document.createElement('span');
-        chkSpan.className = 'ag-check-icon';
-        chkSpan.textContent = '✓';
-        rightSide.prepend(chkSpan);
-      }
-
-      var effortSpan = rowEl.querySelector('.ag-model-effort');
-      if (effortSpan && effort) effortSpan.textContent = effort;
-
-      selectedModelName.textContent = displayName;
-      selectedModelTier.textContent = effort || '';
-      activeModel = effort ? (base + '-' + effort.toLowerCase()) : base;
-
-      closeAllSubmenus();
-      modelMenu.style.display = 'none';
-    }
   }
 
   var currentFilteredSkills = [];

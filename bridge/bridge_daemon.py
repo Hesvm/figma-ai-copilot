@@ -14,11 +14,12 @@ import shutil
 import subprocess
 import threading
 import time
+import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HTTP_PORT = 9444
 AGY_BIN = os.path.expanduser("~/.local/bin/agy")
-EXTRA_PATH = os.path.expanduser("~/.local/bin") + ":/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+EXTRA_PATH = os.path.expanduser("~/.local/bin") + ":" + os.path.expanduser("~/.gemini/antigravity/bin") + ":/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 TMP_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".bridge-tmp")
 os.makedirs(TMP_DIR, exist_ok=True)
 
@@ -138,14 +139,19 @@ IMPORTANT RULES:
 """
 
 
-def parse_agy_models():
-    global CACHED_MODELS
-    if CACHED_MODELS is not None:
+CACHED_MODELS_TS = 0
+MODELS_TTL_SECONDS = 60
+
+def parse_agy_models(force_refresh=False):
+    global CACHED_MODELS, CACHED_MODELS_TS
+    now = time.time()
+    if not force_refresh and CACHED_MODELS is not None and (now - CACHED_MODELS_TS) < MODELS_TTL_SECONDS:
         return CACHED_MODELS
     try:
         env = os.environ.copy()
-        env["PATH"] = "/Users/hesam/.local/bin:/usr/local/bin:/usr/bin:/bin:" + env.get("PATH", "")
-        p = subprocess.run([AGY_BIN, "models"], capture_output=True, text=True, timeout=15, env=env)
+        env["PATH"] = EXTRA_PATH + ":" + env.get("PATH", "")
+        bin_path = find_cli("agy") or AGY_BIN
+        p = subprocess.run([bin_path, "models"], capture_output=True, text=True, timeout=25, env=env)
         models = []
         for line in p.stdout.splitlines():
             clean = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]|\r", "", line).strip()
@@ -156,9 +162,55 @@ def parse_agy_models():
                 models.append({"id": m.group(1), "label": m.group(2).strip()})
         if models:
             CACHED_MODELS = models
-        return models
+            CACHED_MODELS_TS = now
+        return models or CACHED_MODELS or []
     except Exception:
-        return []
+        return CACHED_MODELS or []
+
+
+def get_models_for_provider(provider="antigravity", force_refresh=False):
+    p = (provider or "antigravity").lower()
+    if p == "antigravity":
+        return parse_agy_models(force_refresh=force_refresh)
+    if p == "claude":
+        return [
+            {"id": "claude-opus-4-6", "label": "Claude Opus 4.6"},
+            {"id": "claude-sonnet-4-6", "label": "Claude Sonnet 4.6"},
+            {"id": "claude-haiku-4-5", "label": "Claude Haiku 4.5"},
+        ]
+    if p == "cursor":
+        return [
+            {"id": "default", "label": "Cursor Default"},
+            {"id": "claude-4-sonnet", "label": "Claude Sonnet"},
+            {"id": "gpt-5", "label": "GPT-5"},
+        ]
+    if p == "codex":
+        return [
+            {"id": "o3", "label": "OpenAI o3"},
+            {"id": "gpt-5", "label": "GPT-5"},
+            {"id": "codex-mini", "label": "Codex Mini"},
+        ]
+    if p == "gemini":
+        return [
+            {"id": "gemini-2.5-pro", "label": "Gemini 2.5 Pro"},
+            {"id": "gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
+        ]
+    if p == "ollama":
+        try:
+            env = os.environ.copy()
+            env["PATH"] = "/Users/hesam/.local/bin:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:" + env.get("PATH", "")
+            res = subprocess.run(["ollama", "list"], capture_output=True, text=True, timeout=5, env=env)
+            out = []
+            for line in res.stdout.splitlines()[1:]:
+                parts = line.split()
+                if parts:
+                    out.append({"id": parts[0], "label": parts[0]})
+            if out:
+                return out
+        except Exception:
+            pass
+        return [{"id": "llama3.2", "label": "Llama 3.2 (Local)"}]
+    return [{"id": "default", "label": "Default CLI Model"}]
 
 
 def clean_reply_text(text):
@@ -500,8 +552,11 @@ class BridgeHandler(BaseHTTPRequestHandler):
             self._send_json(200, {"providers": detect_providers()})
         elif self.path == "/skills":
             self._send_json(200, {"skills": list_installed_skills()})
-        elif self.path == "/models":
-            self._send_json(200, {"models": parse_agy_models()})
+        elif self.path.startswith("/models"):
+            qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            prov = (qs.get("provider") or ["antigravity"])[0]
+            refresh = (qs.get("refresh") or ["0"])[0] == "1"
+            self._send_json(200, {"models": get_models_for_provider(prov, force_refresh=refresh), "provider": prov})
         elif self.path.startswith("/job/"):
             job_id = self.path.split("/job/", 1)[1].strip()
             with JOB_LOCK:
@@ -580,6 +635,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
 
 
 def main():
+    threading.Thread(target=parse_agy_models, daemon=True).start()
     ThreadingHTTPServer.allow_reuse_address = True
     server = ThreadingHTTPServer(("", HTTP_PORT), BridgeHandler)
     print(f"Figma AI Copilot Antigravity CLI Bridge listening on http://localhost:{HTTP_PORT}", flush=True)
