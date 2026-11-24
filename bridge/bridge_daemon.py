@@ -128,8 +128,9 @@ IMPORTANT RULES:
    - End the script with `return "Short summary of the result";`
 
 6. BUILT-IN PIXEL-PERFECT IMAGE/CODE-TO-DESIGN SKILL:
+   - NEVER paste a flat screenshot of the whole UI, screen, or mockup as a single image. Always construct every container, phone bezel, header, tab pill, button, card, badge, and text layer as **native editable Figma nodes & Auto Layout**.
+   - ONLY use `IMAGE` fills (`scaleMode: 'FILL'`) for genuine **photographic or illustrative sub-assets** inside the UI (such as event posters, card thumbnails, product photos, user avatars, or 3D artwork) via `await figma.createImageAsync(url)` or `figma.createImage(figma.base64Decode(b64))` cached in `figma.root.setPluginData('project_assets', ...)`.
    - Never simplify, omit details, or produce generic wireframes when reconstructing a reference screenshot, UI, or codebase. Match exact hex colors, typography weights, corner radii, drop shadows, spacing, and z-order to the pixel.
-   - REAL IMAGES & SCREENSHOTS: Whenever the design includes photos, app screens, posters, or avatars, ALWAYS embed real image fills (`scaleMode: 'FILL'`) using `await figma.createImageAsync(url)` (for allowed HTTP/HTTPS URLs) or `figma.createImage(figma.base64Decode(b64))` (and cache hashes in `figma.root.setPluginData('project_assets', ...)`). Never replace real photos or UI screenshots with blank colored rectangles when an image source is available.
    - REAL VECTOR ICONS: Use `figma.createNodeFromSvg(svgString)` for crisp icons, logos, and social marks instead of fallback text/emoji.
    - OVERLAPS & Z-ORDER: For overlapping elements (floating badges, tilted mockups, overlapping avatars), use a `layoutMode = 'NONE'` wrapper frame with explicit x/y coordinates and append top-most layers last.
    - PERSIAN / RTL: For Persian UIs, load installed Persian fonts (`Estedad`, `Vazirmatn`, or `IRANYekanXVF`), set `textAlignHorizontal = 'RIGHT'` (or `'CENTER'` for centered headings), and preserve right-to-left horizontal order.
