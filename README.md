@@ -67,10 +67,6 @@ Most "AI for Figma" tools force you into a bad deal: either buy another monthly 
 </p>
 
 <p align="center">
-  <img src="assets/showcase-settings.png" alt="Minimal Settings, Crypto Support with QR Code, and Creator & Live MCP Status" width="100%" />
-</p>
-
-<p align="center">
   <img src="assets/showcase-persian.png" alt="Native Persian (RTL) Typography with IRANYekanX" width="88%" />
 </p>
 
@@ -206,9 +202,8 @@ Nope! Both [`code.js`](code.js) and [`ui.html`](ui.html) have the full Figma Des
 
 ---
 
-## 💜 Support & Creator
+## 💜 Creator & License
 
-Built with obsessive craft by **Hesam** — [GitHub (`@Hesvm`)](https://github.com/Hesvm) · [X / Twitter (`@hesvvm`)](https://x.com/hesvvm)
+Built by **Hesam** — [GitHub (`@Hesvm`)](https://github.com/Hesvm) · [X / Twitter (`@hesvvm`)](https://x.com/hesvvm)
 
-- **Support via Crypto:** Click **Settings → Support** inside the plugin to view instant QR codes and wallet addresses for **USDT (`BEP-20` / `TRC-20`)**, **Solana (`SOL`)**, and **Toncoin (`TON`)**.
-- **License:** [MIT](LICENSE) — free, open-source, and yours to hack on. If this saved your design workflow (or $30/mo), drop a ⭐ on the repo!
+Licensed under the [MIT License](LICENSE) — free, open-source, and yours to hack on. If this saved your design workflow (or $30/mo), drop a ⭐ on the repo!
