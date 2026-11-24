@@ -66,10 +66,6 @@ Most "AI for Figma" tools force you into a bad deal: either buy another monthly 
   <img src="assets/showcase-providers.png" alt="7 Local AI CLIs, 0 to 100 Interactive Setup Guide, and Auto-Detected Local CLIs" width="100%" />
 </p>
 
-<p align="center">
-  <img src="assets/showcase-persian.png" alt="Native Persian (RTL) Typography with IRANYekanX" width="88%" />
-</p>
-
 ---
 
 ## 🛠️ What Can It Actually Do in Figma?
