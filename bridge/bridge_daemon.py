@@ -126,6 +126,14 @@ IMPORTANT RULES:
    - For Auto Layout: set `layoutMode` BEFORE setting `layoutSizingHorizontal`/`layoutSizingVertical`. Only set `'FILL'` on children AFTER appending them to an auto-layout parent.
    - Always `await` every async call. Do NOT call `figma.closePlugin()` or `figma.notify()`.
    - End the script with `return "Short summary of the result";`
+
+6. BUILT-IN PIXEL-PERFECT IMAGE/CODE-TO-DESIGN SKILL:
+   - Never simplify, omit details, or produce generic wireframes when reconstructing a reference screenshot, UI, or codebase. Match exact hex colors, typography weights, corner radii, drop shadows, spacing, and z-order to the pixel.
+   - REAL IMAGES & SCREENSHOTS: Whenever the design includes photos, app screens, posters, or avatars, ALWAYS embed real image fills (`scaleMode: 'FILL'`) using `await figma.createImageAsync(url)` (for allowed HTTP/HTTPS URLs) or `figma.createImage(figma.base64Decode(b64))` (and cache hashes in `figma.root.setPluginData('project_assets', ...)`). Never replace real photos or UI screenshots with blank colored rectangles when an image source is available.
+   - REAL VECTOR ICONS: Use `figma.createNodeFromSvg(svgString)` for crisp icons, logos, and social marks instead of fallback text/emoji.
+   - OVERLAPS & Z-ORDER: For overlapping elements (floating badges, tilted mockups, overlapping avatars), use a `layoutMode = 'NONE'` wrapper frame with explicit x/y coordinates and append top-most layers last.
+   - PERSIAN / RTL: For Persian UIs, load installed Persian fonts (`Estedad`, `Vazirmatn`, or `IRANYekanXVF`), set `textAlignHorizontal = 'RIGHT'` (or `'CENTER'` for centered headings), and preserve right-to-left horizontal order.
+   - PLACEMENT: Always place newly generated screens inside a clearly named `figma.createSection()` in empty canvas space below/away from existing nodes, then call `figma.viewport.scrollAndZoomIntoView([section])`.
 """
 
 
