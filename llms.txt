@@ -4,7 +4,7 @@
 
 ## Repository
 - GitHub: https://github.com/Hesvm/figma-ai-copilot
-- Author: Hesam (@Hesvm) — https://x.com/Hesvm
+- Author: Hesam (GitHub: @Hesvm | X: https://x.com/hesvvm)
 - License: MIT
 
 ## Core Capabilities

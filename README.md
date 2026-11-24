@@ -176,5 +176,5 @@ Yes. Select **Ollama** in Settings for 100% offline local models, and switch Lan
 
 ## Author & License
 
-Built by **Hesam** ([@Hesvm](https://github.com/Hesvm)) · [X / Twitter](https://x.com/Hesvm)  
+Built by **Hesam** ([@Hesvm](https://github.com/Hesvm)) · [X / Twitter (@hesvvm)](https://x.com/hesvvm)  
 Licensed under the [MIT License](LICENSE). If this saved you time, consider giving the repo a ⭐!
